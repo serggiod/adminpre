@@ -1,0 +1,13 @@
+{
+    "name": "sdominguez/adminpre",
+    "authors": [
+        {
+            "name": "Orlando Sergio Dominguez",
+            "email": "serggio@msn.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.0",
+        "slim/pdo": "^1.9"
+    }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="adminpre">
+<head>
+	<meta charset="UTF-8"/>
+	<title>PRENSA | Administracion</title>
+	<style>
+    	html, .body {
+        	width: 100%;
+        	height: 100%;
+        	margin: 0px;
+        	padding: 0px;
+        	overflow: hidden;
+        	background-color: #333333;
+    	}
+	</style>
+</head>
+<body class="body">
+
+	<!-- Imagen de carga  -->
+	<img id="loading" src="loading.gif" style="position:absolute;top:0;right:0;bottom:0;left:0;margin:auto;"/>
+
+	<!-- Libreria JS: JQuery -->
+	<script type="text/javascript" src="jslib/jquery.min.js"></script>
+
+	<!-- Libreria JS: CryptoJS.MD5 -->
+	<script type="text/javascript" src="jslib/core-min.js"></script>
+	<script type="text/javascript" src="jslib/md5-min.js"></script>	
+
+	<!-- Libreria CSS: Bootstrap -->
+	<script type="text/javascript" src="jslib/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="jslib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="jslib/bootstrap-theme.min.css"/>
+
+	<!-- Libreria CSS: Bootstrap Messajes -->
+	<script type="text/javascript" src="jslib/bootstrap-dialog.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="jslib/bootstrap-dialog.min.css"/>
+	<style>
+	@font-face {
+	    font-family: 'Glyphicons Halflings';
+		src: url('jslib/glyphicons-halflings-regular.eot')  format('embedded-opentype'),
+		     url('jslib/glyphicons-halflings-regular.woff') format('woff'),
+		     url('jslib/glyphicons-halflings-regular.ttf')  format('truetype'),
+		     url('jslib/glyphicons-halflings-regular.svg')  format('svg');
+	}
+	</style>
+
+
+	<!-- Libreria JS: Angular -->
+	<script type="text/javascript" src="jslib/angular.min.js"></script>
+	<script type="text/javascript" src="jslib/angular-route.min.js"></script>
+	<script type="text/javascript" src="jslib/angular-sanitize.min.js"></script>
+
+	<!-- Aplicacion Angular -->
+	<script type="text/javascript" src="application/application.js"></script>
+	<script type="text/javascript" src="controllers/login.js"></script>
+	<script type="text/javascript" src="controllers/logout.js"></script>
+	<script type="text/javascript" src="controllers/password.js"></script>
+	<script type="text/javascript" src="controllers/partes.js"></script>
+
+	<nav id="navbar" class="navbar navbar-default" style="display:none;">
+
+	    <div class="navbar-header">
+	    	<a id="navbar-user" class="navbar-brand" href="#/"></a>
+	    </div>
+
+	    <!-- Menu: Archivo -->
+	    <div class="nav navbar-nav">
+		    <li class="dropdown">
+		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Archivo<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="#/password"><i class="glyphicon glyphicon-edit"></i> Cambiar Password</a></li>
+		            <li role="separator" class="divider"></li>
+		            <li><a href="#/logout"><i class="glyphicon glyphicon-log-out"></i> Salir</a></li>
+		          </ul>
+		    </li>
+	    </div>
+
+	    <!-- Menu: Herramientas -->
+	    <div class="nav navbar-nav">
+		    <li class="dropdown">
+		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Herramientas<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="#/partes">Partes de Prensa</a></li>
+		          </ul>
+		    </li>
+	    </div>
+
+	    <!-- Menu: Ayuda -->
+	    <div class="nav navbar-nav">
+		    <li class="dropdown">
+		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ayuda<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="#/acerca">Acerca de...</a></li>
+		            <li><a href="#/manual">Manual</a></li>
+		          </ul>
+		    </li>
+	    </div>
+	      
+	</nav>
+
+	<div ng-view></div>
+
+	</body>
+</html>
