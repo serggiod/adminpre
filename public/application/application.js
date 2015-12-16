@@ -18,6 +18,14 @@ angular
 		        templateUrl:'views/password.html',
 		        controller:'password'
 		    })
+		    .when('/acercade',{
+		        templateUrl:'views/acercade.html',
+		        controller:'acercade'
+		    })
+		    .when('/manual',{
+		        templateUrl:'views/manual.html',
+		        controller:'manual'
+		    })
 		    .when('/partes',{
 		        templateUrl:'views/partes.html',
 		        controller:'partes'

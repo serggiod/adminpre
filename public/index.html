@@ -9,7 +9,7 @@
         	height: 100%;
         	margin: 0px;
         	padding: 0px;
-        	overflow: hidden;
+        	overflow: scroll-y;
         	background-color: #333333;
     	}
 	</style>
@@ -31,7 +31,7 @@
 	<link rel="stylesheet" type="text/css" href="jslib/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="jslib/bootstrap-theme.min.css"/>
 
-	<!-- Libreria CSS: Bootstrap Messajes -->
+	<!-- Libreria CSS: Bootstrap Dialog -->
 	<script type="text/javascript" src="jslib/bootstrap-dialog.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="jslib/bootstrap-dialog.min.css"/>
 	<style>
@@ -55,9 +55,11 @@
 	<script type="text/javascript" src="controllers/login.js"></script>
 	<script type="text/javascript" src="controllers/logout.js"></script>
 	<script type="text/javascript" src="controllers/password.js"></script>
+	<script type="text/javascript" src="controllers/acercade.js"></script>
+	<script type="text/javascript" src="controllers/manual.js"></script>
 	<script type="text/javascript" src="controllers/partes.js"></script>
 
-	<nav id="navbar" class="navbar navbar-default" style="display:none;">
+	<nav id="navbar" class="navbar navbar-default">
 
 	    <div class="navbar-header">
 	    	<a id="navbar-user" class="navbar-brand" href="#/"></a>
@@ -66,7 +68,7 @@
 	    <!-- Menu: Archivo -->
 	    <div class="nav navbar-nav">
 		    <li class="dropdown">
-		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Archivo<span class="caret"></span></a>
+		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-edit"></i> Archivo<span class="caret"></span></a>
 		          <ul class="dropdown-menu">
 		            <li><a href="#/password"><i class="glyphicon glyphicon-edit"></i> Cambiar Password</a></li>
 		            <li role="separator" class="divider"></li>
@@ -78,9 +80,9 @@
 	    <!-- Menu: Herramientas -->
 	    <div class="nav navbar-nav">
 		    <li class="dropdown">
-		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Herramientas<span class="caret"></span></a>
+		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-menu-hamburger"></i> Herramientas<span class="caret"></span></a>
 		          <ul class="dropdown-menu">
-		            <li><a href="#/partes">Partes de Prensa</a></li>
+		            <li><a href="#/partes"><i class="glyphicon glyphicon-menu-hamburger"></i> Partes de Prensa</a></li>
 		          </ul>
 		    </li>
 	    </div>
@@ -88,10 +90,10 @@
 	    <!-- Menu: Ayuda -->
 	    <div class="nav navbar-nav">
 		    <li class="dropdown">
-		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ayuda<span class="caret"></span></a>
+		        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-question-sign"></i> Ayuda<span class="caret"></span></a>
 		          <ul class="dropdown-menu">
-		            <li><a href="#/acerca">Acerca de...</a></li>
-		            <li><a href="#/manual">Manual</a></li>
+		            <li><a href="#/acercade"><i class="glyphicon glyphicon-info-sign"></i> Acerca de...</a></li>
+		            <li><a href="#/manual"><i class="glyphicon glyphicon-question-sign"></i> Manual</a></li>
 		          </ul>
 		    </li>
 	    </div>
