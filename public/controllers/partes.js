@@ -16,61 +16,55 @@ angular
 		};
 
 		$scope.nuevo = function(){
-			dialog = BootstrapDialog.show({
-				type:BootstrapDialog.TYPE_PRIMARY,
-				closable:false,
-				title:'Nuevo Parte de Prensa',
-				message:$scope.formulario(),
-				buttons:[{
-					label:'Cancelar',
-					cssClass:'btn btn-danger',
-					action:function(){ dialog.close(); }
-				},{
-					label:'Aceptar',
-					cssClass:'btn btn-success',
-					action:function(){
-						alert('Procesar y enviar el formulario');
-					}
-				}]
-			});
+			$location.path('/partes/nuevo');
 		};
 
+		$scope.visualizar = function(id){
+			$location.path('/partes/visualizar/'+id);
+		};
+
+		$scope.modificar = function(id){
+			if(id){
+				if(confirm('¿Esta seguro que desea modificar este registro?')){
+					$location.path('/partes/modificar/'+id);
+				}
+			}
+		}
+
 		$scope.estado   = function(id){
-			if(confirm('¿Esta seguro que desea cambiar el estado de este registro?')){
-				$http.put('models/partes.php/parte/'+id+'/estado')
-					.success(function(json){
-						if(json.result){
-							$scope.reloadPartes();
-						}
-					})
-					.error(function(){
-						$location.path('/');
-					});
+			if(id){
+				if(confirm('¿Esta seguro que desea cambiar el estado de este registro?')){
+					$http.put('models/partes.php/parte/'+id+'/estado')
+						.success(function(json){
+							if(json.result){
+								$scope.reloadPartes();
+							}
+						})
+						.error(function(){
+							$location.path('/');
+						});
+				}
 			}
 		};
 
 		$scope.eliminar = function(id){
-			if(confirm('¿Esta seguro que desea eliminar este registro?')){
-				$http.delete('models/partes.php/parte/'+id)
-					.success(function(json){
-						if(json.result){
-							$scope.reloadPartes();
-						}
-					})
-					.error(function(){
-						$location.path('/');
-					});
+			if(id){
+				if(confirm('¿Esta seguro que desea eliminar este registro?')){
+					$http.delete('models/partes.php/parte/'+id)
+						.success(function(json){
+							if(json.result){
+								$scope.reloadPartes();
+							}
+						})
+						.error(function(){
+							$location.path('/');
+						});
+				}
 			}
-
 		};
 
-		$scope.formulario = function(){
-			html = 'Formulario';
-			return html;
-		} 
-
 		$scope.reloadPartes();
-		// Ocultar loading.
+
 		$('#loading').hide();
 
 	});

@@ -1,0 +1,52 @@
+<div class="panel panel-primary">
+	<div class="panel-heading"> <i class="glyphicon glyphicon-menu-hamburger"></i> PRENSA | Administracion | Partes de Prensa | Visualizar</div>
+	<div class="panel-body">
+
+		<!-- Volanta -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Volanta:</span>
+			<input type="text" class="form-control" maxlength="120" ng-model="volanta" style="width:400px;" readonly="true">
+		</div>
+
+		<!-- Titulo -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Titulo:</span>
+			<input type="text" class="form-control" maxlength="250" ng-model="titulo" style="width:450px;" readonly="true">
+		</div>
+
+		<!-- Bajada -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Bajada:</span>
+			<input type="text" class="form-control" maxlength="250" ng-model="bajada" style="width:400px;" readonly="true">
+		</div>
+
+		<!-- Cabeza -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Cabeza:</span>
+			<textarea class="form-control" ng-model="cabeza" style="width:500px;height:120px;" readonly="true"></textarea>
+		</div>
+
+		<!-- Cuerpo -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Cuerpo:</span>
+			<textarea class="form-control" ng-model="cuerpo" style="width:500px;height:170px;" readonly="true"></textarea>
+		</div>
+
+		<!-- Fecha -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Fecha:</span>
+			<input type="text" class="form-control" ng-model="fecha" style="width:180px;" readonly="true">
+		</div>
+
+		<!-- Hora -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Hora:</span>
+			<input type="text" class="form-control" ng-model="hora" style="width:180px;" readonly="true">
+		</div>
+
+		<button type="button" class="btn btn-info" ng-click="aceptar()" >
+			<i class="glyphicon glyphicon-ok"></i>
+			Aceptar
+		</button>
+	</div>
+</div>
