@@ -47,8 +47,6 @@ $app->post('/',function($request) use ($db,$app,$main) {
 		unset($user['app']);
 		unset($user['roles_id']);
 		
-		usort($user);
-		
 		echo json_encode($user);
 
 	} else {

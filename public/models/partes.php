@@ -177,7 +177,7 @@ $app->delete('/parte/{id}',function($request,$response,$args) use ($app,$db,$mai
 
 });
 
-// Subir fotografias.
+// POST: Formulario Nuevo: insertar fotografias.
 $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db,$main){
 
 	if($_FILES['archivo']['name']){
@@ -200,7 +200,7 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 
 				$sql = $db->insert(array('parte_id','fotografias_id','orden'))
 			        ->into('partes_fotografias')
-			        ->values(array('99999999999',$inserId,1));
+			        ->values(array('99999999999',$fotografiasId,1));
 			    $partesFotografiasId = $sql->execute();
 
 				if($partesFotografiasId){
@@ -216,6 +216,51 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 		$main->error404();
 	}
 
+});
+
+// DELETE: Formulario Nuevo: Remover Fotografias.
+// $app->delete('/parte/fotografia/:fotoId/:partesFotoId/:archivo', function($request,$response,$args) use ($app,$db,$main){
+$app->delete('/parte/fotografia/remove',function($request,$response,$args) use ($app,$db,$main){
+	$json         = json_decode($request->getBody());
+	$fotoId       = filter_var($json->fotoId,FILTER_SANITIZE_NUMBER_INT);
+	$partesFotoId = filter_var($json->partesFotoId,FILTER_SANITIZE_NUMBER_INT);
+	$archivo      = filter_var($json->archivo,FILTER_SANITIZE_STRING);
+	print_r($json);
+	die;
+/*
+
+	if($fotoId && $partesFotoId && $archivo){
+		
+		$sql = $db->delete()
+			->from('fotografias')
+			->where('id','=',$fotoId);
+		
+		if($sql->execute()){
+
+			$sql = $db->delete()
+				->from('partes_fotografias')
+				->where('id','=',$partesFotoId);
+
+				if($sql->execute()){
+
+					if(unlink('/var/www/html/public/img/fotografias/'.$archivo)){
+						echo json_encode(array('result'=>true),JSON_FORCE_OBJECT);
+					} else {
+						echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);
+					}
+
+				} else {
+					echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);		
+				}
+
+		} else {
+			echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);
+		}
+
+	} else {
+		$main->error404();
+	}
+*/
 });
 
 // Salida del Framewrok.

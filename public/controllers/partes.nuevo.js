@@ -79,13 +79,11 @@ angular
 
 		$scope.subir = function(){
 			if(($scope.titulo.length > 1) && ($scope.cabeza.length > 1)){
-				var archivos = $('#archivos');
-				archivos.click();
-				archivos.on('change',function(){
-
-					files = this.files;
-					for(i=0;i<files.length;i++){
-						type = files[i].type.split('/');
+				var fileInput = $('#fileInput');
+				fileInput.on('change',function(){
+					fileList = this.files;
+					for(i=0;i<fileList.length;i++){
+						type = fileList[i].type.split('/');
 						if(type[0]==='image'){
 
 							form = new FormData;
@@ -93,7 +91,7 @@ angular
 							form.append('titulo',$scope.titulo);
 							form.append('texto',$scope.cabeza);
 							form.append('fecha',$scope.anio+'-'+$scope.mes+'-'+$scope.dia);
-							form.append('archivo',files[i]);
+							form.append('archivo',fileList[i]);
 
 							$.ajax({
 							    url	:'models/partes.php/parte/fotografia',	
@@ -101,10 +99,17 @@ angular
 							    processData:false,
 	                            contentType:false,
 							    data:form,
-							    success:function(x){
-							    	json = JSON.parse(x);
+							    success:function(j){
+							    	json = JSON.parse(j);
 							        if(json.result){
-							             $('#fotografiasDisplay').append('<img src="/public/img/fotografias/'+json.archivo+'" width="100"/><br/>');
+							        	img  = '<a ';
+							        	img += 'id="'+json.fotoId+json.partesFotoId+'" ';
+							        	img += 'class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" href="javascript: window.removeFotografia('+json.fotoId+','+json.partesFotoId+',\''+json.archivo+'\')">';
+							        	img += '<img ';
+							        	img += 'src="/public/img/fotografias/'+json.archivo+'" ';
+							        	img += 'width="120" style="margin:5px;float:left;"/>';
+							        	img += '</a>';
+							            $('#fotografiasDisplay').append(img);
 							        }
 							    },
 							    error:function(){ $location.path('/login'); }
@@ -112,13 +117,14 @@ angular
 
 						}
 					}
-				})
+				});
+				fileInput.click();
 			} else {
 				dialog = BootstrapDialog.show({
 					type:BootstrapDialog.TYPE_DANGER,
 					closable:false,
 					title:'Error',
-					message:'Primero debe completar los campos <b>Titulo</b> y <b>Cabeza</b>.',
+					message:'Primero debe completar el formulario.',
 					buttons:[{
 						label:'Aceptar',
 						cssClass:'btn btn-danger',
@@ -128,10 +134,6 @@ angular
 			}
 		};
 
-		$scope.reloadFotografias = function(){
-			alert('Recargar fotografias');
-		};
-
 		$scope.gotoPartes = function(){
 			window.location.href = '#/partes';
 		};
@@ -139,3 +141,26 @@ angular
 		$scope.reload();
 
 	});
+
+window.removeFotografia = function(f,pf,a){
+
+	$.ajax({
+	    url	:'models/partes.php/parte/fotografia/remove',	
+	    type:'DELETE',
+	    processData:false,
+        contentType:false,
+        data:{
+        	fotoId:f,
+        	partesFotoId:pf,
+        	archivo:a
+        },
+	    success:function(j){
+	    	json = JSON.parse(j);
+	        if(json.result){
+	        	$('#'+f+pf).remove();
+	        }
+	    },
+	    error:function(){ window.location.href = '#/login'; }
+	});
+
+};
