@@ -79,22 +79,21 @@ angular
 
 		$scope.subir = function(){
 			if(($scope.titulo.length > 1) && ($scope.cabeza.length > 1)){
-				archivos = $('#archivos');
+				var archivos = $('#archivos');
 				archivos.click();
 				archivos.on('change',function(){
-					archivos = this.files;
-					for(i=0;i<archivos.length;i++){
-						type = archivos[i].type.split('/');
-						if(type=='image'){
+
+					files = this.files;
+					for(i=0;i<files.length;i++){
+						type = files[i].type.split('/');
+						if(type[0]==='image'){
 
 							form = new FormData;
 
 							form.append('titulo',$scope.titulo);
 							form.append('texto',$scope.cabeza);
 							form.append('fecha',$scope.anio+'-'+$scope.mes+'-'+$scope.dia);
-							form.append('archivo',archivos[i]);
-
-							console.log(archivos[i]);
+							form.append('archivo',files[i]);
 
 							$.ajax({
 							    url	:'models/partes.php/parte/fotografia',	
@@ -102,9 +101,10 @@ angular
 							    processData:false,
 	                            contentType:false,
 							    data:form,
-							    success:function(json){
+							    success:function(x){
+							    	json = JSON.parse(x);
 							        if(json.result){
-							             $scope.reloadFotografias();
+							             $('#fotografiasDisplay').append('<img src="/public/img/fotografias/'+json.archivo+'" width="100"/><br/>');
 							        }
 							    },
 							    error:function(){ $location.path('/login'); }

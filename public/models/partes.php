@@ -185,25 +185,28 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 		$titulo = filter_input(INPUT_POST,'titulo',FILTER_SANITIZE_STRING);
 		$texto  = filter_input(INPUT_POST,'texto',FILTER_SANITIZE_STRING);
 		$fecha  = date('Y-m-d',strtotime(filter_input(INPUT_POST,'fecha',FILTER_SANITIZE_STRING)));
-		$tmp  = $_FILES['archivo']['tmp_name'][$i];
-		$name = '/var/www/html/public/imf/fotografias/'.$_FILES['archivo']['name'];
+		$tmp    = $_FILES['archivo']['tmp_name'];
+		$file   = str_replace(array('.',' '),array('-','-'),microtime()).'-'.$_FILES['archivo']['name'];
+		$name   = '/var/www/html/public/img/fotografias/'.$file;
 		
 		if(move_uploaded_file($tmp,$name)){
+
 			$sql = $db->insert(array('titulo','archivo','texto','fecha','autor','estado'))
 		        ->into('fotografias')
 		        ->values(array($titulo,$_FILES['archivo']['name'],$texto,$fecha,'Direccionde Prensa de la Legislatura de Jujuy',1));
-		    $insertId = $sql->execute();
+		    $fotografiasId = $sql->execute();
 
-			if($inserId){
+			if($fotografiasId){
 
 				$sql = $db->insert(array('parte_id','fotografias_id','orden'))
 			        ->into('partes_fotografias')
 			        ->values(array('99999999999',$inserId,1));
+			    $partesFotografiasId = $sql->execute();
 
-				if($sql->execute()){
-					echo json_encode(array('result'=>true));
+				if($partesFotografiasId){
+					echo json_encode(array('result'=>true,'fotoId'=>$fotografiasId,'partesFotoId'=>$partesFotografiasId,'archivo'=>$file),JSON_FORCE_OBJECT);
 				} else {
-					echo json_encode(array('result'=>false));
+					echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);
 				}
 			}
 
