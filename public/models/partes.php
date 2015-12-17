@@ -220,16 +220,12 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 
 // DELETE: Formulario Nuevo: Remover Fotografias.
 // $app->delete('/parte/fotografia/:fotoId/:partesFotoId/:archivo', function($request,$response,$args) use ($app,$db,$main){
-$app->delete('/parte/fotografia/remove',function($request,$response,$args) use ($app,$db,$main){
-	$json         = json_decode($request->getBody());
-	$fotoId       = filter_var($json->fotoId,FILTER_SANITIZE_NUMBER_INT);
-	$partesFotoId = filter_var($json->partesFotoId,FILTER_SANITIZE_NUMBER_INT);
-	$archivo      = filter_var($json->archivo,FILTER_SANITIZE_STRING);
-	print_r($json);
-	die;
-/*
+$app->delete('/parte/fotografia/{fotoId}/{archivo}',function($request,$response,$args) use ($app,$db,$main){
 
-	if($fotoId && $partesFotoId && $archivo){
+	$fotoId       = filter_var($args['fotoId'],FILTER_SANITIZE_NUMBER_INT);
+	$archivo      = filter_var($args['archivo'],FILTER_SANITIZE_NUMBER_INT);
+
+	if($fotoId && $archivo){
 		
 		$sql = $db->delete()
 			->from('fotografias')
@@ -239,7 +235,7 @@ $app->delete('/parte/fotografia/remove',function($request,$response,$args) use (
 
 			$sql = $db->delete()
 				->from('partes_fotografias')
-				->where('id','=',$partesFotoId);
+				->where('fotografia_id','=',$fotoId);
 
 				if($sql->execute()){
 
@@ -260,7 +256,6 @@ $app->delete('/parte/fotografia/remove',function($request,$response,$args) use (
 	} else {
 		$main->error404();
 	}
-*/
 });
 
 // Salida del Framewrok.
