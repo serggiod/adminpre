@@ -101,10 +101,11 @@ angular
 							    data:form,
 							    success:function(j){
 							    	json = JSON.parse(j);
+							    	console.log(json);
 							        if(json.result){
 							        	img  = '<a ';
 							        	img += 'id="'+json.fotoId+json.partesFotoId+'" ';
-							        	img += 'class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" href="javascript: window.removeFotografia('+json.fotoId+',\''+json.archivo+'\')">';
+							        	img += 'class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" href="javascript: window.removeFotografia('+json.fotoId+','+json.partesFotoId+',\''+json.archivo+'\')">';
 							        	img += '<img ';
 							        	img += 'src="/public/img/fotografias/'+json.archivo+'" ';
 							        	img += 'width="120" style="margin:5px;float:left;"/>';
@@ -142,15 +143,16 @@ angular
 
 	});
 
-window.removeFotografia = function(f,a){
+window.removeFotografia = function(f,pf,a){
 
 	$.ajax({
-	    url	:'models/partes.php/parte/fotografia/'+f+'/'+a,	
+	    url	:'models/partes.php/parte/fotografia/'+f+'/'+pf+'/'+a,	
 	    type:'DELETE',
 	    processData:false,
         contentType:false,
 	    success:function(j){
 	    	json = JSON.parse(j);
+	    	console.log(json);
 	        if(json.result){
 	        	$('#'+f+pf).remove();
 	        }

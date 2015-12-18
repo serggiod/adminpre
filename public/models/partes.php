@@ -200,7 +200,7 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 
 				$sql = $db->insert(array('parte_id','fotografias_id','orden'))
 			        ->into('partes_fotografias')
-			        ->values(array('99999999999',$fotografiasId,1));
+			        ->values(array('2147483647',$fotografiasId,1));
 			    $partesFotografiasId = $sql->execute();
 
 				if($partesFotografiasId){
@@ -220,27 +220,41 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 
 // DELETE: Formulario Nuevo: Remover Fotografias.
 // $app->delete('/parte/fotografia/:fotoId/:partesFotoId/:archivo', function($request,$response,$args) use ($app,$db,$main){
-$app->delete('/parte/fotografia/{fotoId}/{archivo}',function($request,$response,$args) use ($app,$db,$main){
+$app->delete('/parte/fotografia/{fotoId}/{parteFotoId}/{archivo}',function($request,$response,$args) use ($app,$db,$main){
 
 	$fotoId       = filter_var($args['fotoId'],FILTER_SANITIZE_NUMBER_INT);
-	$archivo      = filter_var($args['archivo'],FILTER_SANITIZE_NUMBER_INT);
+	$parteFotoId  = filter_var($args['parteFotoId'],FILTER_SANITIZE_NUMBER_INT);
+	$archivo      = filter_var($args['archivo'],FILTER_SANITIZE_STRING);
+
+	error_log($fotoId);
+	error_log($parteFotoId);
+	error_log($archivo);
 
 	if($fotoId && $archivo){
 		
 		$sql = $db->delete()
 			->from('fotografias')
 			->where('id','=',$fotoId);
-		
+		error_log('paso 1');
 		if($sql->execute()){
 
 			$sql = $db->delete()
 				->from('partes_fotografias')
-				->where('fotografia_id','=',$fotoId);
-
+				->where('id','=',$parteFotoId);
+				error_log('paso 2');
 				if($sql->execute()){
 
-					if(unlink('/var/www/html/public/img/fotografias/'.$archivo)){
+					//chmod('/var/www/html/public/img/fotografias/'.$archivo,777);
+					//$file   = '/var/www/html/public/img/fotografias/'.$archivo;
+					//$return = false;
+					//$output = array();
+					//exec("rm $file",$output,$return);
+					//print_r($output);
+					if(unlink('/var/www/html/public/img/fotografias/'.$archivo,0777)){
+					error_log('paso 3');
+					//if($return){
 						echo json_encode(array('result'=>true),JSON_FORCE_OBJECT);
+						error_log('paso 3');
 					} else {
 						echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);
 					}
