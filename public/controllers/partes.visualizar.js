@@ -16,6 +16,8 @@ angular
 			$scope.fecha   = '';
 			$scope.hora    = '';
 
+			$scope.fotografias = {};
+
 			$http.get('models/partes.php/parte/'+$scope.id)
 				.success(function(json){
 					$scope.volanta = json.volanta;
@@ -27,6 +29,15 @@ angular
 
 					$scope.fecha   = json.fecha;
 					$scope.hora    = json.hora;
+
+					$http.get('models/partes.php/parte/fotografias/'+$scope.id)
+						.success(function(json){
+							console.log(json);
+							$scope.fotografias = json;
+						})
+						.error(function(){
+							$location.path('/login');
+						});
 				})
 				.error(function(){
 					$location.path('/login');

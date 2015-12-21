@@ -2,7 +2,7 @@ angular
 	.module('adminpre')
 	.controller('partesModificar',function($scope,$location,$http,$routeParams){
 
-$scope.id = $routeParams.id;
+		$scope.id = $routeParams.id;
 
 		$scope.reload = function(){
 
@@ -20,6 +20,7 @@ $scope.id = $routeParams.id;
 			$scope.hora    = '';
 			$scope.minuto  = '';
 			$scope.segundo = '';
+			$scope.fotografias = {};
 
 			$http.get('models/partes.php/parte/'+$scope.id)
 				.success(function(json){
@@ -39,6 +40,14 @@ $scope.id = $routeParams.id;
 					$scope.hora    = parseInt(hora[0]);
 					$scope.minuto  = parseInt(hora[1]);
 					$scope.segundo = parseInt(hora[2]);
+
+					$http.get('models/partes.php/parte/fotografias/'+$scope.id)
+						.success(function(json){
+							$scope.fotografias = json;
+						})
+						.error(function(){
+							$location.path('/login');
+						});
 				})
 				.error(function(){
 					$location.path('/login');
@@ -106,4 +115,81 @@ $scope.id = $routeParams.id;
 		};
 
 		$scope.reload();
+
+		$scope.subir = function(){
+			if(($scope.titulo.length > 1) && ($scope.cabeza.length > 1)){
+				var fileInput = $('#fileInput');
+				fileInput.on('change',function(){
+					fileList = this.files;
+					for(i=0;i<fileList.length;i++){
+						type = fileList[i].type.split('/');
+						if(type[0]==='image'){
+
+							form = new FormData;
+
+							form.append('parteid',$scope.id);
+							form.append('titulo',$scope.titulo);
+							form.append('texto',$scope.cabeza);
+							form.append('fecha',$scope.anio+'-'+$scope.mes+'-'+$scope.dia);
+							form.append('archivo',fileList[i]);
+
+							$.ajax({
+							    url	:'models/partes.php/parte/fotografia',	
+							    type:'POST',
+							    processData:false,
+	                            contentType:false,
+							    data:form,
+							    success:function(j){
+							    	json = JSON.parse(j);
+							        if(json.result){
+							        	img  = '<a ';
+							        	img += 'id="'+json.fotoId+json.partesFotoId+'" ';
+							        	img += 'class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" href="javascript: window.removeFotografia('+json.fotoId+','+json.partesFotoId+',\''+json.archivo+'\')">';
+							        	img += '<img ';
+							        	img += 'src="/public/img/fotografias/'+json.archivo+'" ';
+							        	img += 'width="120" style="margin:5px;float:left;"/>';
+							        	img += '</a>';
+							            $('#fotografiasDisplay').append(img);
+							        }
+							    },
+							    error:function(){ $location.path('/login'); }
+							});
+
+						}
+					}
+				});
+				fileInput.click();
+			} else {
+				dialog = BootstrapDialog.show({
+					type:BootstrapDialog.TYPE_DANGER,
+					closable:false,
+					title:'Error',
+					message:'Primero debe completar el formulario.',
+					buttons:[{
+						label:'Aceptar',
+						cssClass:'btn btn-danger',
+						action:function(){ dialog.close(); }
+					}]
+				});
+			}
+		};
+
+		$scope.removeFotografia = function(f,pf,a){
+
+			$.ajax({
+			    url	:'models/partes.php/parte/fotografia/'+f+'/'+pf+'/'+a,	
+			    type:'DELETE',
+			    processData:false,
+		        contentType:false,
+			    success:function(j){
+			    	json = JSON.parse(j);
+			        if(json.result){
+			        	$('#'+f+pf).remove();
+			        }
+			    },
+			    error:function(){ $location.path('#/login'); }
+			});
+
+		};
+
 	});

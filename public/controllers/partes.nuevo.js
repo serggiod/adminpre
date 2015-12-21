@@ -101,7 +101,6 @@ angular
 							    data:form,
 							    success:function(j){
 							    	json = JSON.parse(j);
-							    	console.log(json);
 							        if(json.result){
 							        	img  = '<a ';
 							        	img += 'id="'+json.fotoId+json.partesFotoId+'" ';
@@ -152,7 +151,6 @@ window.removeFotografia = function(f,pf,a){
         contentType:false,
 	    success:function(j){
 	    	json = JSON.parse(j);
-	    	console.log(json);
 	        if(json.result){
 	        	$('#'+f+pf).remove();
 	        }

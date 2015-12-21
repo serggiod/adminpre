@@ -36,12 +36,29 @@ $app->post('/parte',function($request,$response,$args) use ($app,$db,$main){
 	$fecha    = date('Y-m-d',strtotime(filter_var($json->fecha,FILTER_SANITIZE_STRING)));
 	$hora     = date('h:m:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
 
+	// Intertar una noticia en fotografias.
 	$sql = $db->insert(array('volanta','titulo','bajada','cabeza','cuerpo','fecha','hora','estado'))
         ->into('partes')
         ->values(array($volanta,$titulo,$bajada,$cabeza,$cuerpo,$fecha,$hora,0));
+    
+    $partesId = $sql->execute();
 
-	if($sql->execute()){
-		echo json_encode(array('result'=>true));
+	if($partesId){
+
+		// Relacionar las fotografias con la noticia.
+		$sql = $db->update()
+			->table('partes_fotografias')
+			->set(array('parte_id'=>$partesId))
+			->whereNull('parte_id');
+
+		$affecedRows = $sql->execute();
+
+		if($affecedRows) {
+			echo json_encode(array('result'=>true));
+		} else {
+			echo json_encode(array('result'=>false));
+		}
+		
 	} else {
 		echo json_encode(array('result'=>false));
 	}
@@ -177,31 +194,78 @@ $app->delete('/parte/{id}',function($request,$response,$args) use ($app,$db,$mai
 
 });
 
+
+// GET: Imprime json con lista de fotografias relacioanda a un parte.
+$app->get('/parte/fotografias/{parteId}', function($request,$response,$args) use ($app,$db,$main){
+
+	$parteId = filter_var($args['parteId'],FILTER_SANITIZE_NUMBER_INT);
+	error_log($parteId);
+	if($parteId){
+		
+		$sql = $db->select(array('fotografias.id id','partes_fotografias.id parteid','fotografias.archivo archivo'))
+			->from('partes_fotografias')
+			->join('fotografias','fotografias.id','=','partes_fotografias.fotografia_id')
+			->where('partes_fotografias.parte_id','=',$parteId);
+		$query = $sql->execute();
+		$fotos = $query->fetchAll();
+
+		if($fotos){
+			$json = array();
+			foreach ($fotos as $f) {
+				$json[] = array(
+					'id'=>$f['id'],
+					'parteid'=>$f['parteid'],
+					'archivo'=>$f['archivo']
+				);
+			}
+			echo json_encode($json,JSON_FORCE_OBJECT);
+		} else {
+			$main->error404();
+		}
+
+	} else {
+		$main->error404();
+	}
+});
+
 // POST: Formulario Nuevo: insertar fotografias.
 $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db,$main){
 
 	if($_FILES['archivo']['name']){
 
+		$parteId = filter_input(INPUT_POST,'parteid',FILTER_SANITIZE_NUMBER_INT);
 		$titulo = filter_input(INPUT_POST,'titulo',FILTER_SANITIZE_STRING);
 		$texto  = filter_input(INPUT_POST,'texto',FILTER_SANITIZE_STRING);
 		$fecha  = date('Y-m-d',strtotime(filter_input(INPUT_POST,'fecha',FILTER_SANITIZE_STRING)));
 		$tmp    = $_FILES['archivo']['tmp_name'];
 		$file   = str_replace(array('.',' '),array('-','-'),microtime()).'-'.$_FILES['archivo']['name'];
 		$name   = '/var/www/html/public/img/fotografias/'.$file;
-		
+
+		// Mover un archivo temporal al directorio de fotografias.
 		if(move_uploaded_file($tmp,$name)){
 
+			// Insertar el nombre del archivo en la tabla fotografias.
 			$sql = $db->insert(array('titulo','archivo','texto','fecha','autor','estado'))
 		        ->into('fotografias')
-		        ->values(array($titulo,$_FILES['archivo']['name'],$texto,$fecha,'Direccionde Prensa de la Legislatura de Jujuy',1));
+		        ->values(array($titulo,$file,$texto,$fecha,'Direccionde Prensa de la Legislatura de Jujuy',1));
 		    $fotografiasId = $sql->execute();
 
 			if($fotografiasId){
 
-				$sql = $db->insert(array('parte_id','fotografias_id','orden'))
-			        ->into('partes_fotografias')
-			        ->values(array('2147483647',$fotografiasId,1));
-			    $partesFotografiasId = $sql->execute();
+				// Insertar en la tabla partes fotografias una relacion con fotografias.
+				$partesFotografiasId = false;
+
+				if($parteId){
+					$sql = $db->insert(array('parte_id','fotografia_id','orden'))
+				        ->into('partes_fotografias')
+				        ->values(array($parteId,$fotografiasId,1));
+				    $partesFotografiasId = $sql->execute();
+				} else {
+					$sql = $db->insert(array('fotografia_id','orden'))
+				        ->into('partes_fotografias')
+				        ->values(array($fotografiasId,1));
+				    $partesFotografiasId = $sql->execute();
+				}
 
 				if($partesFotografiasId){
 					echo json_encode(array('result'=>true,'fotoId'=>$fotografiasId,'partesFotoId'=>$partesFotografiasId,'archivo'=>$file),JSON_FORCE_OBJECT);
@@ -219,49 +283,40 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 });
 
 // DELETE: Formulario Nuevo: Remover Fotografias.
-// $app->delete('/parte/fotografia/:fotoId/:partesFotoId/:archivo', function($request,$response,$args) use ($app,$db,$main){
 $app->delete('/parte/fotografia/{fotoId}/{parteFotoId}/{archivo}',function($request,$response,$args) use ($app,$db,$main){
 
 	$fotoId       = filter_var($args['fotoId'],FILTER_SANITIZE_NUMBER_INT);
 	$parteFotoId  = filter_var($args['parteFotoId'],FILTER_SANITIZE_NUMBER_INT);
 	$archivo      = filter_var($args['archivo'],FILTER_SANITIZE_STRING);
 
-	error_log($fotoId);
-	error_log($parteFotoId);
-	error_log($archivo);
-
 	if($fotoId && $archivo){
-		
+
+		// Elimina un registro de la tabla fotografias.		
 		$sql = $db->delete()
 			->from('fotografias')
 			->where('id','=',$fotoId);
-		error_log('paso 1');
-		if($sql->execute()){
+		$affecedRows = $sql->execute();
 
+		if($affecedRows){
+
+			// Elimina un registro relacionado en la tabla partes_fotografias.
 			$sql = $db->delete()
 				->from('partes_fotografias')
 				->where('id','=',$parteFotoId);
-				error_log('paso 2');
-				if($sql->execute()){
+			$affecedRows = $sql->execute();
 
-					//chmod('/var/www/html/public/img/fotografias/'.$archivo,777);
-					//$file   = '/var/www/html/public/img/fotografias/'.$archivo;
-					//$return = false;
-					//$output = array();
-					//exec("rm $file",$output,$return);
-					//print_r($output);
-					if(unlink('/var/www/html/public/img/fotografias/'.$archivo,0777)){
-					error_log('paso 3');
-					//if($return){
-						echo json_encode(array('result'=>true),JSON_FORCE_OBJECT);
-						error_log('paso 3');
-					} else {
-						echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);
-					}
+			if($affecedRows){
 
+				// Elimina el archivo relacionado con la tabla fotografias.
+				if(unlink('/var/www/html/public/img/fotografias/'.$archivo)){
+					echo json_encode(array('result'=>true),JSON_FORCE_OBJECT);
 				} else {
-					echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);		
+					echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);
 				}
+
+			} else {
+				echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);		
+			}
 
 		} else {
 			echo json_encode(array('result'=>false),JSON_FORCE_OBJECT);

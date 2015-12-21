@@ -44,6 +44,14 @@
 			<input type="text" class="form-control" ng-model="hora" style="width:180px;" readonly="true">
 		</div>
 
+		<!-- Fotografias -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Fotografias:</span>
+			<div id="fotografiasDisplay" class="form-control" style="width:500px;height:120px;overflow:auto;">
+				<img ng-repeat="f in fotografias" src="/public/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;"/>
+			</div>
+		</div>
+
 		<button type="button" class="btn btn-info" ng-click="aceptar()" >
 			<i class="glyphicon glyphicon-ok"></i>
 			Aceptar

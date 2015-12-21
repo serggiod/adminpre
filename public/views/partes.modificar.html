@@ -51,9 +51,24 @@
 			<input type="number" class="form-control" min="0" max="59" ng-model="segundo" style="width:90px;">
 		</div>
 
+		<!-- Fotografias -->
+		<div class="input-group">
+			<span  class="input-group-addon" style="width:120px;">Fotografias:</span>
+			<div id="fotografiasDisplay" class="form-control" style="width:500px;height:120px;overflow:auto;">
+				<a  ng-repeat="f in fotografias" id="{{f.id}}{{f.parteid}}" class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" ng-click="removeFotografia(f.id,f.partefid,'f.archivo')"><img src="/public/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;"/></a>
+			</div>
+		</div>
+
+		<input id="fileInput" type="file" style="display:none;" multiple="true"/>
+
 		<button type="button" class="btn btn-danger"  ng-click="cancelar()">
 			<i class="glyphicon glyphicon-remove"></i>
 			Cancelar
+		</button>
+
+		<button type="button" class="btn btn-primary" ng-click="subir()">
+			<i class="glyphicon glyphicon-cloud-upload"></i>
+			Subir Fotograf&iacute;as
 		</button>
 
 		<button type="button" class="btn btn-success" ng-click="aceptar()" >
