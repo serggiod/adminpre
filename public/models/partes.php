@@ -282,6 +282,7 @@ $app->post('/parte/fotografia', function($request,$response,$args) use ($app,$db
 
 });
 
+//http://localhost/adminpre/models/partes.php/parte/fotografia/2119/1181/0-18736900-1450787077-1.png
 // DELETE: Formulario Nuevo: Remover Fotografias.
 $app->delete('/parte/fotografia/{fotoId}/{parteFotoId}/{archivo}',function($request,$response,$args) use ($app,$db,$main){
 

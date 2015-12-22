@@ -176,19 +176,15 @@ angular
 
 		$scope.removeFotografia = function(f,pf,a){
 
-			$.ajax({
-			    url	:'models/partes.php/parte/fotografia/'+f+'/'+pf+'/'+a,	
-			    type:'DELETE',
-			    processData:false,
-		        contentType:false,
-			    success:function(j){
-			    	json = JSON.parse(j);
+			$http.delete('models/partes.php/parte/fotografia/'+f+'/'+pf+'/'+a)
+				.success(function(json){
 			        if(json.result){
 			        	$('#'+f+pf).remove();
-			        }
-			    },
-			    error:function(){ $location.path('#/login'); }
-			});
+			    	}
+			    })
+				.error(function(){
+					$location.path('#/login');
+				});
 
 		};
 

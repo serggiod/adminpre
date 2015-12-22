@@ -55,7 +55,7 @@
 		<div class="input-group">
 			<span  class="input-group-addon" style="width:120px;">Fotografias:</span>
 			<div id="fotografiasDisplay" class="form-control" style="width:500px;height:120px;overflow:auto;">
-				<a  ng-repeat="f in fotografias" id="{{f.id}}{{f.parteid}}" class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" ng-click="removeFotografia(f.id,f.partefid,'f.archivo')"><img src="/public/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;"/></a>
+				<a  ng-repeat="f in fotografias" id="{{f.id}}{{f.parteid}}" class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" ng-click="removeFotografia(f.id,f.parteid,f.archivo)"><img src="/public/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;"/></a>
 			</div>
 		</div>
 
