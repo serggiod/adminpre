@@ -2,6 +2,9 @@ angular
 	.module('adminpre')
 	.controller('login',function($scope,$location,$http){
 
+		//$('#pax1').parallax();
+		//$('#pax2').parallax();
+
 		$scope.alert    = {
 			type:'warning',
 			text:'Complete el siguiente formulario con sus datos pesonales.'
