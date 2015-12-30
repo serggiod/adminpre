@@ -3,14 +3,16 @@
 # Requerir archivo base..
 require_once 'base.php';
 
+
 # Peticion POST.
 $app->post('/',function($request) use ($db,$app,$main) {
 
+	
 	# Optener variables.
 	$json     = json_decode($request->getBody());
 	$usuario  = filter_var($json->user,FILTER_SANITIZE_STRING);
 	$password = filter_var($json->pass,FILTER_SANITIZE_STRING);
-	
+
 	// Chequear si el usuario esta habilitado.
 	$sql   = $db->select()
 		->from('usuarios')
