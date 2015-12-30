@@ -1,5 +1,5 @@
 angular
-	.module('adminpre',['ngRoute','ui.materialize'])
+	.module('adminpre',['ngRoute','ui.materialize','ngStorage'])
 	.config(function($routeProvider){
 	    $routeProvider
 		    .when('/',{

@@ -31,25 +31,31 @@
     		position:relative;
     		top:-150px;
     	}
+    	.loading{
+    		width:200px;
+    		height:150px;
+    		overflow:hidden;
+    		text-align: center;
+    		position: absolute;
+    		top: 0;
+    		left: 0;
+    		bottom: 0;
+    		right: 0;
+    		margin:auto;
+    	}
+    	.loading img{
+    		width:190px;
+    		height:auto;
+    	}
 	</style>
 </head>
 <body class="body backwhite">
 
-	<!--
-	<div class="preloader-wrapper big active">
-    	<div class="spinner-layer spinner-blue-only">
-      		<div class="circle-clipper left">
-        		<div class="circle"></div>
-      		</div>
-	      	<div class="gap-patch">
-	        	<div class="circle"></div>
-	      	</div>
-	      	<div class="circle-clipper right">
-	        	<div class="circle"></div>
-	      	</div>
-    	</div>
+	<div class="loading">
+    	<img src="img/loading.gif" />
+    	<br/>
+    	Cargando...
     </div>
-    -->
 
 	<!-- Libreria JS: JQuery -->
 	<script type="text/javascript" src="jslib/jquery.min.js"></script>
@@ -68,9 +74,15 @@
 	<script type="text/javascript" src="jslib/angular-route.min.js"></script>
 	<script type="text/javascript" src="jslib/angular-sanitize.min.js"></script>
 	<script type="text/javascript" src="jslib/angular-materialize.js"></script>
+	<script type="text/javascript" src="jslib/angular-storage.min.js"></script>
 
 	<!-- Aplicacion Angular -->
 	<script type="text/javascript" src="application/application.js"></script>
+
+	<!-- Aplicacion Angular: Factorias -->
+	<script type="text/javascript" src="factory/session.js"></script>
+
+	<!-- Aplicacion Angular: Controladores. -->
 	<script type="text/javascript" src="controllers/login.js"></script>
 	<script type="text/javascript" src="controllers/logout.js"></script>
 	<script type="text/javascript" src="controllers/password.js"></script>
@@ -81,9 +93,10 @@
 	<script type="text/javascript" src="controllers/partes.nuevo.js"></script>
 	<script type="text/javascript" src="controllers/partes.visualizar.js"></script>
 
+
 	<!-- Barra de Menu Principal -->
 	<nav class="blue darken-4 z-depth-2">
-    	<a id="navbar-user" class="brand-logo left" href="#/">Login de Usuario</a>
+    	<a id="navbar-user" class="brand-logo left" href="#/">LEGISLATURA | Prensa</a>
 	</nav>
 
 	<!-- Imagen de Fondo de Diseño -->
@@ -91,6 +104,6 @@
 
 	<!-- Seccion Princial -->
 	<section class="row container rowpos" ng-view></section>
-
+	
 </body>
 </html>

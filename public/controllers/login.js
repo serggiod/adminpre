@@ -1,6 +1,9 @@
 angular
 	.module('adminpre')
-	.controller('login',function($scope,$location,$http){
+	.controller('login',function($scope,$location,$http,$session){
+
+		// Ocultar loading.
+		$('.loading').hide();
 
 		$scope.usuario  = '';
 		$scope.password = '';
@@ -11,7 +14,7 @@ angular
 		};
 
 		// Reaizar login.
-		$scope.login     = function(){
+		$scope.login = function(){
 			
 			if(($scope.usuario.length>=1) && ($scope.password.length>=1)){
 				json ={
@@ -21,29 +24,43 @@ angular
 
 				$http.post('models/login.php/',json)
 				.success(function(json){
-					$scope.alert.type = 'green lighten-3';
-					$scope.alert.text = 'El usuario ha creado una sesion en forma correcta.';
 
 					if(json.result){
+
+						$scope.alert.type = 'green lighten-3';
+						$scope.alert.text = 'El usuario ha creado una sesion en forma correcta.';
+
 						$('#navbar-user').html('Bienvenido '+json.nombre+' '+json.apellido);
+
+						$session.start();
+						$session.set('user',$json);
+
+						console.log($session);
+
 						$location.path('/partes');
-					} else {
+
+					} 
+
+					else {
+
 						$scope.alert.type='red lighten-4';
 						$scope.alert.text='El servidor informa que este usuario no existe.';						
+
 					}
 				})
 				.error(function(){
+
 					$scope.alert.type='red lighten-4';
 					$scope.alert.text='El servidor informa que este usuario no existe.';
+
 				});
 			} else {
+
 				$scope.alert.type = "red lighten-4";
 				$scope.alert.text = "Todos los campos son obligatorios.";
+
 			}
 
 		}
-
-		// Ocultar loading.
-		$('#loading').hide();
 
 	});
