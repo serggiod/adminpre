@@ -8,6 +8,7 @@
     ],
     "require": {
         "slim/slim": "^3.0",
-        "slim/pdo": "^1.9"
+        "slim/pdo": "^1.9",
+        "zendframework/zend-validator": "^2.5"
     }
 }

@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
+    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
+    'Zend\\Hydrator\\' => array($vendorDir . '/zendframework/zend-hydrator/src'),
     'Slim\\PDO\\' => array($vendorDir . '/slim/pdo/src/PDO'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),

@@ -1,40 +1,42 @@
 angular
     .module('adminpre')
-    .factory('$session',function($http,$location){
-    return {
-        data    : {},
-        logged  : {},
-        start:function(){
-            $this        = this;
-            $this.data   = {};
-            $this.logged = {};
+    .factory('$session',function($http,$location,Session){
+    
+        return {
+            start:function(){
+                date = new Date();
+                sessionStorage.setItem('loggedin',true);
+                sessionStorage.setItem('loggeddate',date.valueOf());
+                sessionStorage.setItem('user',{});
+            },
+            destroy:function(){
+                sessionStorage.setItem('loggedin',null);
+                sessionStorage.setItem('loggeddate',null);
+                sessionStorage.setItem('user',{});
+                Session = {};
+                $location.path('/login');
+            },
+            autorize:function(promise){
+                $this = this;
+                loggedin = sessionStorage.getItem('loggedin');
+                console.log(loggedin);   
+                if(loggedin===true){
 
-            date = new Date();
-            $this.logged.in = true;
-            $this.logged.time = date.getDate();
-        },
-        destroy:function(){
-            $this        = this;
-            $this.data   = {};
-            $this.logged = {};
-            $location.path('/login');
-        },
-        autorize:function(promise){
-            $this=this;
+                    //date = new Date();
+                    //diff = Math.abs(date.valueOf() - $this.logged.date);
+                    //console.log(diff);
+                    promise();
 
-            ndate = new Date();
-            odate = new Date($this.logged.time);
-
-            if($this.logged.in===true){
-                ddate = Math.abs(ndate - odate);
-                
-                if(ddate <= 3600000){
-                    $http.post('models/login.php/session',$this.logged)
+                    /*
+                    if(diff <= 3600){
+                    
+                    $http.get('models/login.php/sessionStorage')
                     .success(function(json,status){
                         if(status===200){
                             if(json.result){
-                                $this.logger.time = ndate.getDate();
-                                promise();
+                                $this.logged.date = new Date();
+                                //promise();
+
                             }
 
                             else {
@@ -49,24 +51,20 @@ angular
                     .error(function(){
                         $this.destroy();
                     });
+                    */
+
                 }
 
                 else {
                     $this.destroy();
                 }
+            },
+            get:function(key){
+                return Session[key];
+            },
+            set:function(key,value){
+                Session[key] = value;
             }
+        };
 
-            else {
-                $this.destroy();
-            }
-        },
-        get:function(key){
-            $this = this;
-            return $this.data[key];
-        },
-        set:function(key,value){
-            $this = this;
-            $this.data.key = value;
-        }
-    }
-});
+    });

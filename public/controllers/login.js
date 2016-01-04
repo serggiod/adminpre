@@ -30,12 +30,10 @@ angular
 						$scope.alert.type = 'green lighten-3';
 						$scope.alert.text = 'El usuario ha creado una sesion en forma correcta.';
 
-						$('#navbar-user').html('Bienvenido '+json.nombre+' '+json.apellido);
+						$('#navbar-user').html('Bienvenido '+json.user.nombre+' '+json.user.apellido);
 
 						$session.start();
-						$session.set('user',$json);
-
-						console.log($session);
+						$session.set('user',json.user);
 
 						$location.path('/partes');
 

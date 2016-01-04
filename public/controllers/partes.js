@@ -1,9 +1,13 @@
 angular
 	.module('adminpre')
-	.controller('partes',function($scope,$location,$http){
+	.controller('partes',function($scope,$location,$http,$session){
 
-		$scope.menu = true;
-		$scope.partes = {};
+		$scope.init = function(){
+			$session.autorize(function(){
+				$scope.menu = true;
+				$scope.partes = {};				
+			});
+		};
 
 		$scope.reloadPartes = function(){
 			$http.get('models/partes.php/partes')
@@ -63,8 +67,8 @@ angular
 			}
 		};
 
+		$scope.init();
 		$scope.reloadPartes();
-
 		$('#loading').hide();
 
 	});
