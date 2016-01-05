@@ -1,14 +1,17 @@
 angular
 	.module('adminpre')
-	.controller('password',function($scope,$location,$http){
+	.controller('password',function($scope,$location,$http,$session){
 
-		$scope.alert      = {
-			type:'warning',
-			text:'Complete el formulario para cambiar el password.'
-		};
-
-		$scope.password   = '';
-		$scope.repassword = '';
+		$scope.init = function(){
+			$session.autorize(function(){
+				$scope.alert  = {
+					type:'green',
+					text:'Complete el formulario para cambiar el password.'
+				};
+				$scope.password   = '';
+				$scope.repassword = '';				
+			});
+		}
 
 		$scope.cancelar = function(){
 			$location.path('/partes');
@@ -16,37 +19,40 @@ angular
 
 		$scope.aceptar = function(){
 			
-			json = {
-				pass   : CryptoJS.MD5($scope.password).toString(),
-				repass : CryptoJS.MD5($scope.repassword).toString()
-			};
-			
-			if($scope.password){
-				if(json.pass===json.repass){
+			if($scope.password.length>=4 && $scope.repassword.length>=4) {
+				var json = {
+					pass   : CryptoJS.MD5($scope.password).toString(),
+					repass : CryptoJS.MD5($scope.repassword).toString()
+				};
+				if(json.pass===json.repass) {
+					$session.autorize(function(){
+						$http.put('models/login.php/password',json)
+							.success(function(json){
+								if(json.result){
+									$scope.alert.type = 'green';
+									$scope.alert.text = 'El password se ha modificado en forma correcta.';
+									$('#password').attr('disabled','true');
+									$('#repassword').attr('disabled','true');
+									$('#cancelar').hide();
+									$('#aceptar').hide();
 
-					$http.put('models/login.php/password',json)
-						.success(function(json){
-							if(json.result){
-								$scope.alert.type = 'success';
-								$scope.alert.text = 'El password se ha modificado en forma correcta.';
-								$('#password').attr('disabled','true');
-								$('#repassword').attr('disabled','true');
-								$('#cancelar').attr('style','display:none;');
-								$('#aceptar').attr('style','display:none;');
 
-							} else {
-								$scope.alert.type = 'danger';
-								$scope.alert.text = 'No se pudo modficar el password.';
-							}
-						})
-						.error(function(){
-							$location.path('/');
-						});
+								} 
 
-				} else {
+								else {
+									$scope.alert.type = 'red';
+									$scope.alert.text = 'No se pudo modficar el password.';
+								}
+							})
+							.error(function(){
+								$session.destroy();
+							});
+					});
+				}
 
-					$scope.alert.type = 'danger';
-					$scope.alert.text = 'Los campos \"Nuevo Password\"" y \"Repetir Password\"" deben ser identicos.';
+				else {
+					$scope.alert.type = 'red';
+					$scope.alert.text = 'Los campos \"Password\"" y \"Re-Password\"" deben ser iguales.';
 					$scope.password   = '';
 					$scope.repassword = '';
 					json.pass         = '';
@@ -54,7 +60,13 @@ angular
 				}
 			}
 
-
+			else {
+				$scope.alert.type = 'red';
+				$scope.alert.text = 'Todos los campos son obligatorios.';
+			}
 		}
+
+		$session.mainmenu();
+		$scope.init();
 
 	});

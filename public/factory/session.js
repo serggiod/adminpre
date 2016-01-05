@@ -3,58 +3,45 @@ angular
     .factory('$session',function($http,$location,Session){
     
         return {
-            start:function(){
+            start:function(user){
                 date = new Date();
                 sessionStorage.setItem('loggedin',true);
                 sessionStorage.setItem('loggeddate',date.valueOf());
-                sessionStorage.setItem('user',{});
+                sessionStorage.setItem('user',JSON.stringify(user));
             },
             destroy:function(){
                 sessionStorage.setItem('loggedin',null);
                 sessionStorage.setItem('loggeddate',null);
-                sessionStorage.setItem('user',{});
+                sessionStorage.setItem('user',null);
                 Session = {};
                 $location.path('/login');
             },
             autorize:function(promise){
                 $this = this;
-                loggedin = sessionStorage.getItem('loggedin');
-                console.log(loggedin);   
+                loggedin = eval(sessionStorage.getItem('loggedin'));
                 if(loggedin===true){
-
-                    //date = new Date();
-                    //diff = Math.abs(date.valueOf() - $this.logged.date);
-                    //console.log(diff);
-                    promise();
-
-                    /*
+                    date = new Date();
+                    diff = (date.valueOf() - parseInt(sessionStorage.getItem('loggeddate'))) / 1000;
                     if(diff <= 3600){
-                    
-                    $http.get('models/login.php/sessionStorage')
-                    .success(function(json,status){
-                        if(status===200){
+                        $http.get('models/login.php/session')
+                        .success(function(json){
                             if(json.result){
-                                $this.logged.date = new Date();
-                                //promise();
-
+                                date = new Date();
+                                sessionStorage.setItem('loggeddate',date.valueOf());
+                                promise();
                             }
-
                             else {
                                 $this.destroy();
                             }
-                        } 
-
-                        else {
+                        })
+                        .error(function(){
                             $this.destroy();
-                        }
-                    })
-                    .error(function(){
-                        $this.destroy();
-                    });
-                    */
-
+                        });
+                    }
+                    else {
+                        $this.destroy();    
+                    }
                 }
-
                 else {
                     $this.destroy();
                 }
@@ -64,6 +51,18 @@ angular
             },
             set:function(key,value){
                 Session[key] = value;
+            },
+            getUser:function(){
+                return JSON.parse(sessionStorage.getItem('user'));
+            },
+            mainmenu:function(){
+                $('.loading').hide();
+                $.get('views/menu.html',function(html){
+                    user = JSON.parse(sessionStorage.getItem('user'));
+                    $('#navbar-logo').html('LEGISLATURA | Prensa | '+user.nombre);
+                    $('#mainmenu').html(html);
+                    $("#menuArchivoMain").dropdown();
+                });
             }
         };
 

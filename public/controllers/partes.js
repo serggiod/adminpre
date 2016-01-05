@@ -67,8 +67,8 @@ angular
 			}
 		};
 
+		$session.mainmenu();
 		$scope.init();
 		$scope.reloadPartes();
-		$('#loading').hide();
 
 	});
