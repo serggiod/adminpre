@@ -1,6 +1,6 @@
 angular
     .module('adminpre')
-    .factory('$session',function($http,$location,Session){
+    .factory('$session',function($http,$location){
     
         return {
             start:function(user){
@@ -13,7 +13,9 @@ angular
                 sessionStorage.setItem('loggedin',null);
                 sessionStorage.setItem('loggeddate',null);
                 sessionStorage.setItem('user',null);
-                Session = {};
+                for(i in sessionStorage){
+                    delete sessionStorage[i];
+                }
                 $location.path('/login');
             },
             autorize:function(promise){
@@ -47,10 +49,10 @@ angular
                 }
             },
             get:function(key){
-                return Session[key];
+                return sessionStorage.getItem(key);
             },
             set:function(key,value){
-                Session[key] = value;
+                sessionStorage.setItem(key,value);
             },
             getUser:function(){
                 return JSON.parse(sessionStorage.getItem('user'));
@@ -59,7 +61,7 @@ angular
                 $('.loading').hide();
                 $.get('views/menu.html',function(html){
                     user = JSON.parse(sessionStorage.getItem('user'));
-                    $('#navbar-logo').html('LEGISLATURA | Prensa | '+user.nombre);
+                    $('#navbar-logo').html('LEGISLATURA | '+user.nombre);
                     $('#mainmenu').html(html);
                     $("#menuArchivoMain").dropdown();
                 });

@@ -2,6 +2,8 @@ angular
 	.module('adminpre')
 	.controller('login',function($scope,$location,$http,$session){
 		
+		$session.destroy();
+		
 		$('.loading').hide();
 		$('#navbar-logo').html('LEGISLATURA | Prensa');
 		$('#mainmenu').html('');

@@ -1,10 +1,10 @@
 angular
 	.module('adminpre')
-	.controller('partesNuevo',function($scope,$location,$http){
+	.controller('partesNuevo',function($scope,$location,$http,$session){
 
-		$scope.date = new Date();
+		$scope.init = function(){
+			$scope.date = new Date();
 
-		$scope.reload = function(){
 			$scope.volanta = '';
 			$scope.titulo  = '';
 			$scope.bajada  = '';
@@ -26,119 +26,93 @@ angular
 		};
 
 		$scope.aceptar  = function(){
-			$('#loading').show();
-			json = {
-				volanta:$scope.volanta,
-				titulo:$scope.titulo,
-				bajada:$scope.bajada,
-				cabeza:$scope.cabeza,
-				cuerpo:$scope.cuerpo,
-				fecha:$scope.anio+'-'+$scope.mes+'-'+$scope.dia,
-				hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo
-			};
-			$http.post('models/partes.php/parte',json)
-				.success(function(json){
-					$('#loading').hide();
-					if(json.result){
-						dialog = BootstrapDialog.show({
-							type:BootstrapDialog.TYPE_SUCCESS,
-							closable:false,
-							title:'Correcto',
-							message:'El parte de prensa se ha ingresado en forma correcta.',
-							buttons:[{
-								label:'Aceptar',
-								cssClass:'btn btn-success',
-								action:function(){
-									$scope.reload();
-									$scope.gotoPartes();
-									dialog.close();
-								}
-							}]
-						});
-					} else {
-						dialog = BootstrapDialog.show({
-							type:BootstrapDialog.TYPE_DANGER,
-							closable:false,
-							title:'Error',
-							message:'El parte de prensa no se ha ingresado en forma correcta.',
-							buttons:[{
-								label:'Aceptar',
-								cssClass:'btn btn-danger',
-								action:function(){
-									dialog.close();
-								}
-							}]
-						});
-					}
-				})
-				.error(function(){
-					$('#loading').hide();
-					$location.path('/login');
-				});
+			$session.autorize(function(){
+				json = {
+					volanta:$scope.volanta,
+					titulo:$scope.titulo,
+					bajada:$scope.bajada,
+					cabeza:$scope.cabeza,
+					cuerpo:$scope.cuerpo,
+					fecha:$scope.anio+'-'+$scope.mes+'-'+$scope.dia,
+					hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo
+				};
+				$http.post('models/partes.php/parte',json)
+					.success(function(json){
+						if(json.result){
+							$scope.alert.type = 'green';
+							$scope.alert.text = 'El parte de prensa se ha ingresado en forma correcta.';
+							$location.path('/partes');
+						} else {
+							$scope.alert.type = 'red';
+							$scope.alert.text = 'El parte de prensa no se ha ingresado en forma correcta.';
+						}
+					})
+					.error(function(){
+						$session.destroy();
+					});
+			});
 		};
 
 		$scope.subir = function(){
+
 			if(($scope.titulo.length > 1) && ($scope.cabeza.length > 1)){
-				var fileInput = $('#fileInput');
-				fileInput.on('change',function(){
-					fileList = this.files;
-					for(i=0;i<fileList.length;i++){
-						type = fileList[i].type.split('/');
-						if(type[0]==='image'){
+					var fileInput = $('#fileInput');					
+					fileInput.on('change',function(){
+						fileList = this.files;
+						for(i=0;i<fileList.length;i++){
+							type = fileList[i].type.split('/');
+							if(type[0]==='image'){
 
-							form = new FormData;
+								var form = new FormData;
 
-							form.append('titulo',$scope.titulo);
-							form.append('texto',$scope.cabeza);
-							form.append('fecha',$scope.anio+'-'+$scope.mes+'-'+$scope.dia);
-							form.append('archivo',fileList[i]);
+								form.append('titulo',$('#titulo').val());
+								form.append('texto',$('#cabeza').val());
+								form.append('fecha',$('#anio').val()+'-'+$('#mes').val()+'-'+$('#dia').val());
+								form.append('archivo',fileList[i]);
 
-							$.ajax({
-							    url	:'models/partes.php/parte/fotografia',	
-							    type:'POST',
-							    processData:false,
-	                            contentType:false,
-							    data:form,
-							    success:function(j){
-							    	json = JSON.parse(j);
-							        if(json.result){
-							        	img  = '<a ';
-							        	img += 'id="'+json.fotoId+json.partesFotoId+'" ';
-							        	img += 'class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" href="javascript: window.removeFotografia('+json.fotoId+','+json.partesFotoId+',\''+json.archivo+'\')">';
-							        	img += '<img ';
-							        	img += 'src="/public/img/fotografias/'+json.archivo+'" ';
-							        	img += 'width="120" style="margin:5px;float:left;"/>';
-							        	img += '</a>';
-							            $('#fotografiasDisplay').append(img);
-							        }
-							    },
-							    error:function(){ $location.path('/login'); }
-							});
+								$.ajax({
+								    url	:'models/partes.php/parte/fotografia',	
+								    type:'POST',
+								    processData:false,
+		                            contentType:false,
+								    data:form,
+								    success:function(j){
+								    	json = JSON.parse(j);
+								        if(json.result){
+								        	img  = '<a ';
+								        	img += 'id="'+json.fotoId+json.partesFotoId+'" ';
+								        	img += 'class="glyphicon glyphicon-remove-sign" style="cursor:pointer;" href="javascript: window.removeFotografia('+json.fotoId+','+json.partesFotoId+',\''+json.archivo+'\')">';
+								        	img += '<img ';
+								        	img += 'src="/public/img/fotografias/'+json.archivo+'" ';
+								        	img += 'width="120" style="margin:5px;float:left;"/>';
+								        	img += '</a>';
+								            $('#fotografiasDisplay').append(img);
+								        }
+								    },
+								    error:function(){ $location.path('/login'); }
+								});
+								
 
+							}
 						}
-					}
-				});
-				fileInput.click();
-			} else {
-				dialog = BootstrapDialog.show({
-					type:BootstrapDialog.TYPE_DANGER,
-					closable:false,
-					title:'Error',
-					message:'Primero debe completar el formulario.',
-					buttons:[{
-						label:'Aceptar',
-						cssClass:'btn btn-danger',
-						action:function(){ dialog.close(); }
-					}]
-				});
+					});
+					fileInput.click();
+			} 
+
+			else {
+				$scope.alert.type = 'red';
+				$scope.alert.text = 'Primero debe completar el formulario.';
 			}
 		};
 
-		$scope.gotoPartes = function(){
-			window.location.href = '#/partes';
-		};
-
-		$scope.reload();
+		$session.autorize(function(){
+			$scope.alert = {
+				type:'yellow',
+				text:'Complete el siguiente formulario para ingresar un nuevo parte de prensa.'
+			};
+			$session.mainmenu();
+			$scope.init();
+		});
 
 	});
 
