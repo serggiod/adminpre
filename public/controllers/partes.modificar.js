@@ -1,56 +1,35 @@
 angular
 	.module('adminpre')
-	.controller('partesModificar',function($scope,$location,$http,$routeParams){
+	.controller('partesModificar',function($scope,$location,$http,$routeParams,$session){
 
-		$scope.id = $routeParams.id;
-
-		$scope.reload = function(){
-
-			$scope.volanta = '';
-			$scope.titulo  = '';
-			$scope.bajada  = '';
-
-			$scope.cabeza  = '';
-			$scope.cuerpo  = '';
-
-			$scope.dia     = '';
-			$scope.mes     = '';
-			$scope.anio    = '';
-
-			$scope.hora    = '';
-			$scope.minuto  = '';
-			$scope.segundo = '';
-			$scope.fotografias = {};
-
+		$scope.init = function(){
+			$scope.id = $routeParams.id;
+			$scope.alert = {};
 			$http.get('models/partes.php/parte/'+$scope.id)
 				.success(function(json){
 					$scope.volanta = json.volanta;
 					$scope.titulo  = json.titulo;
 					$scope.bajada  = json.bajada;
-
 					$scope.cabeza  = json.cabeza;
 					$scope.cuerpo  = json.cuerpo;
-
-					fecha = json.fecha.split('-');
-					$scope.dia     = parseInt(fecha[0]);
-					$scope.mes     = parseInt(fecha[1]);
-					$scope.anio    = parseInt(fecha[2]);
-
-					hora = json.hora.split(':');
-					$scope.hora    = parseInt(hora[0]);
-					$scope.minuto  = parseInt(hora[1]);
-					$scope.segundo = parseInt(hora[2]);
-
+					$scope.dia     = parseInt(json.dia);
+					$scope.mes     = parseInt(json.mes);
+					$scope.anio    = parseInt(json.anio);
+					$scope.hora    = parseInt(json.hora);
+					$scope.minuto  = parseInt(json.minuto);
+					$scope.segundo = parseInt(json.segundo);
 					$http.get('models/partes.php/parte/fotografias/'+$scope.id)
 						.success(function(json){
 							$scope.fotografias = json;
+							$scope.alert.type = 'yellow';
+							$scope.alert.text = 'Cambie los datos para modificar el parte de prensa.';
 						})
 						.error(function(){
-							$location.path('/login');
+							$session.destroy();
 						});
 				})
 				.error(function(){
-					$location.path('/login');
+					$session.destroy();
 				});
 		};
 
@@ -59,65 +38,35 @@ angular
 		};
 
 		$scope.aceptar  = function(){
-			$('#loading').show();
-			json = {
-				volanta:$scope.volanta,
-				titulo:$scope.titulo,
-				bajada:$scope.bajada,
-				cabeza:$scope.cabeza,
-				cuerpo:$scope.cuerpo,
-				fecha:$scope.anio+'-'+$scope.mes+'-'+$scope.dia,
-				hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo
-			};
-			$http.put('models/partes.php/parte/'+$scope.id,json)
-				.success(function(json){
-					$('#loading').hide();
-					if(json.result){
-						dialog = BootstrapDialog.show({
-							type:BootstrapDialog.TYPE_SUCCESS,
-							closable:false,
-							title:'Correcto',
-							message:'El parte de prensa se ha modiicado en forma correcta.',
-							buttons:[{
-								label:'Aceptar',
-								cssClass:'btn btn-success',
-								action:function(){
-									$scope.reload();
-									$scope.gotoPartes();
-									dialog.close();
-								}
-							}]
-						});
-					} else {
-						dialog = BootstrapDialog.show({
-							type:BootstrapDialog.TYPE_DANGER,
-							closable:false,
-							title:'Error',
-							message:'El parte de prensa no se ha modificado en forma correcta.',
-							buttons:[{
-								label:'Aceptar',
-								cssClass:'btn btn-danger',
-								action:function(){
-									dialog.close();
-								}
-							}]
-						});
-					}
-				})
-				.error(function(){
-					$('#loading').hide();
-					$location.path('/login');
-				});
+			$session.autorize(function(){
+				json = {
+					volanta:$scope.volanta,
+					titulo:$scope.titulo,
+					bajada:$scope.bajada,
+					cabeza:$scope.cabeza,
+					cuerpo:$scope.cuerpo,
+					fecha:$scope.anio+'-'+$scope.mes+'-'+$scope.dia,
+					hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo
+				};
+				$http.put('models/partes.php/parte/'+$scope.id,json)
+					.success(function(json){
+						$('#loading').hide();
+						if(json.result){
+							$location.path('/partes');
+						} 
+						else {
+							$scope.alert.type = 'red';
+							$scope.alert.text = 'Se detecto un error.';
+						}
+					})
+					.error(function(){
+						$session.destroy();
+					});
+			});
 		};
-
-		$scope.gotoPartes = function(){
-			window.location.href = '#/partes';
-		};
-
-		$scope.reload();
 
 		$scope.subir = function(){
-			if(($scope.titulo.length > 1) && ($scope.cabeza.length > 1)){
+			if(($scope.titulo.length>=1) && ($scope.cabeza.length>=1)){
 				var fileInput = $('#fileInput');
 				fileInput.on('change',function(){
 					fileList = this.files;
@@ -152,30 +101,23 @@ angular
 							            $('#fotografiasDisplay').append(img);
 							        }
 							    },
-							    error:function(){ $location.path('/login'); }
+							    error:function(){
+							    	$session.destroy();
+							    }
 							});
 
 						}
 					}
 				});
 				fileInput.click();
-			} else {
-				dialog = BootstrapDialog.show({
-					type:BootstrapDialog.TYPE_DANGER,
-					closable:false,
-					title:'Error',
-					message:'Primero debe completar el formulario.',
-					buttons:[{
-						label:'Aceptar',
-						cssClass:'btn btn-danger',
-						action:function(){ dialog.close(); }
-					}]
-				});
+			} 
+			else {
+				$scope.alert.type = 'red';
+				$scope.alert.text = 'Todos los campos son obligatorios.';
 			}
 		};
 
 		$scope.removeFotografia = function(f,pf,a){
-
 			$http.delete('models/partes.php/parte/fotografia/'+f+'/'+pf+'/'+a)
 				.success(function(json){
 			        if(json.result){
@@ -183,9 +125,12 @@ angular
 			    	}
 			    })
 				.error(function(){
-					$location.path('#/login');
+					$session.destroy();
 				});
-
 		};
+
+		$session.autorize(function(){
+			$scope.init();
+		});
 
 	});

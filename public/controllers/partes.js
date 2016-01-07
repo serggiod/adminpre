@@ -3,13 +3,6 @@ angular
 	.controller('partes',function($scope,$location,$http,$session){
 
 		$scope.init = function(){
-			$session.autorize(function(){
-				$scope.menu = true;
-				$scope.partes = {};				
-			});
-		};
-
-		$scope.reloadPartes = function(){
 			$http.get('models/partes.php/partes')
 				.success(function(json){
 					$scope.partes = json;
@@ -28,7 +21,7 @@ angular
 		};
 
 		$scope.modificar = function(id){
-			if(id){
+			if(id>=1){
 				if(confirm('¿Esta seguro que desea modificar este registro?')){
 					$location.path('/partes/modificar/'+id);
 				}
@@ -36,39 +29,44 @@ angular
 		}
 
 		$scope.estado   = function(id){
-			if(id){
+			if(id>=1){
 				if(confirm('¿Esta seguro que desea cambiar el estado de este registro?')){
-					$http.put('models/partes.php/parte/'+id+'/estado')
-						.success(function(json){
-							if(json.result){
-								$scope.reloadPartes();
-							}
-						})
-						.error(function(){
-							$location.path('/');
-						});
+					$session.autorize(function(){
+						$http.put('models/partes.php/parte/'+id+'/estado')
+							.success(function(json){
+								if(json.result){
+									$scope.init();
+								}
+							})
+							.error(function(){
+								$session.destroy();
+							});s
+					});
 				}
 			}
 		};
 
 		$scope.eliminar = function(id){
-			if(id){
+			if(id>=1){
 				if(confirm('¿Esta seguro que desea eliminar este registro?')){
-					$http.delete('models/partes.php/parte/'+id)
-						.success(function(json){
-							if(json.result){
-								$scope.reloadPartes();
-							}
-						})
-						.error(function(){
-							$location.path('/');
-						});
+					$session.autorize(function(){
+						$http.delete('models/partes.php/parte/'+id)
+							.success(function(json){
+								if(json.result){
+									$scope.init();
+								}
+							})
+							.error(function(){
+								$session.destroy();
+							});
+					});
 				}
 			}
 		};
 
-		$session.mainmenu();
-		$scope.init();
-		$scope.reloadPartes();
+		$session.autorize(function(){
+			$session.mainmenu();
+			$scope.init();
+		});
 
 	});

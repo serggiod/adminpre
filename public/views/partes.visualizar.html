@@ -1,60 +1,98 @@
-<div class="panel panel-primary">
-	<div class="panel-heading"> <i class="glyphicon glyphicon-menu-hamburger"></i> PRENSA | Administracion | Partes de Prensa | Visualizar</div>
-	<div class="panel-body">
+<div class="col s12 m12 l12">
+	<div class="card white z-depth-2">
 
-		<!-- Volanta -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Volanta:</span>
-			<input type="text" class="form-control" maxlength="120" ng-model="volanta" style="width:400px;" readonly="true">
-		</div>
-
-		<!-- Titulo -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Titulo:</span>
-			<input type="text" class="form-control" maxlength="250" ng-model="titulo" style="width:450px;" readonly="true">
-		</div>
-
-		<!-- Bajada -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Bajada:</span>
-			<input type="text" class="form-control" maxlength="250" ng-model="bajada" style="width:400px;" readonly="true">
-		</div>
-
-		<!-- Cabeza -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Cabeza:</span>
-			<textarea class="form-control" ng-model="cabeza" style="width:500px;height:120px;" readonly="true"></textarea>
-		</div>
-
-		<!-- Cuerpo -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Cuerpo:</span>
-			<textarea class="form-control" ng-model="cuerpo" style="width:500px;height:170px;" readonly="true"></textarea>
-		</div>
-
-		<!-- Fecha -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Fecha:</span>
-			<input type="text" class="form-control" ng-model="fecha" style="width:180px;" readonly="true">
-		</div>
-
-		<!-- Hora -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Hora:</span>
-			<input type="text" class="form-control" ng-model="hora" style="width:180px;" readonly="true">
-		</div>
-
-		<!-- Fotografias -->
-		<div class="input-group">
-			<span  class="input-group-addon" style="width:120px;">Fotografias:</span>
-			<div id="fotografiasDisplay" class="form-control" style="width:500px;height:120px;overflow:auto;">
-				<img ng-repeat="f in fotografias" src="/public/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;"/>
+		<!-- tarjeta: Titulo -->
+		<div class="card grey lighten-2 z-depth-2 center">
+			<div class="card-action">
+				<h4>
+					Partes de Prensa | Visualizar
+				</h4>
 			</div>
 		</div>
 
-		<button type="button" class="btn btn-info" ng-click="aceptar()" >
-			<i class="glyphicon glyphicon-ok"></i>
-			Aceptar
-		</button>
+		<!-- Mensaje de alerta -->
+		<div class="card-action {{alert.type}} lighten-4">
+			{{alert.text}}
+		</div>
+
+		<!-- Tarjeta: Contenido -->
+		<div class="card-content white">
+
+			<!-- Volanta -->
+				<label for="volanta">Volanta:</label>
+			<div class="input-field">
+				<input id="volanta" type="text" maxlength="120" ng-model="volanta" style="width:400px;" readonly="">
+			</div>
+
+
+			<!-- Titulo -->
+			<label for="titulo">Titulo:</label>
+			<div class="input-field">
+				<input id="titulo" type="text" maxlength="250" ng-model="titulo" style="width:450px;" readonly="">
+			</div>
+
+			<!-- Bajada -->
+			<label for="bajada">Bajada:</label>
+			<div class="input-field">
+				<input id="bajada" type="text" maxlength="250" ng-model="bajada" style="width:400px;" readonly="">
+			</div>
+
+			<!-- Cabeza -->
+			<label for="cabeza">Cabeza:</label>
+			<div class="input-field">
+				<textarea id="cabeza" ng-model="cabeza" class="materialize-textarea" style="width:500px;height:120px;" readonly=""></textarea>
+			</div>
+
+			<!-- Cuerpo -->
+			<label    for="cuerpo">Cuerpo:</label>
+			<div class="input-field">
+				<textarea id="cuerpo" ng-model="cuerpo" class="materialize-textarea" style="width:500px;height:170px;" readonly=""></textarea>
+			</div>
+
+			<!-- Fecha -->
+			<label for="fecha">Fecha:</label>
+			<div class="input-field">
+				<fieldset id="fecha">
+					<br/>
+					<input type="number" min="1" max="31" ng-model="dia" style="width:90px;" readonly="">
+					<span  style="width:50px;">/</span>
+					<input type="number" min="1" max="12" ng-model="mes" style="width:90px;" readonly="">
+					<span  style="width:50px;">/</span>
+					<input type="number" min="1975" max="2016" ng-model="anio" style="width:90px;" readonly="">
+				</fieldset>
+			</div>
+
+			<!-- Hora -->
+			<label for="hora">Hora:</label>
+			<div class="input-field">
+				<fieldset id="hora">
+					<br/>
+					<input type="number" min="0" max="23" ng-model="hora" style="width:90px;" readonly="">
+					<span  style="width:50px;">:</span>
+					<input type="number" min="0" max="59" ng-model="minuto" style="width:90px;" readonly="">
+					<span  style="width:50px;">:</span>
+					<input type="number" min="0" max="59" ng-model="segundo" style="width:90px;" readonly="">
+				</fieldset>
+			</div>
+
+			<!-- Fotografias -->
+			<label for="fotografias">Fotografias:</label>
+			<div class="input-field">
+				<fieldset id="fotografias">
+					<div id="fotografiasDisplay" style="width:500px;height:120px;overflow:auto;">
+						<img ng-repeat="f in fotografias" src="/public/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;"/>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+
+		<!-- Tarjeta: Botones -->
+		<div class="card-action blue darken-2">
+			<button type="button" class="btn orange darken-4" ng-click="aceptar()" >
+				Aceptar
+				<i class="icons ion-android-cancel right"></i>
+			</button>
+		</div>
+
 	</div>
 </div>

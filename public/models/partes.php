@@ -15,12 +15,22 @@ $app->get('/partes',function() use ($db,$app,$main) {
 				"p.estado estado"
 			))
 			->from('partes p')
-			->orderBy('p.fecha','desc')
-			->orderBy('p.hora','desc')
+			->orderBy('p.id','desc')
+			//->orderBy('p.fecha','desc')
+			//->orderBy('p.hora','desc')
 			->limit(0,10);
 	$query  = $sql->execute();
 	$partes = $query->fetchAll();
-
+	for($i=0;$i<count($partes);$i++){
+		if($partes[$i]['estado']==1) {
+			$partes[$i]['estado']='ACTIVO';
+			$partes[$i][5]='ACTIVO';
+		}
+		else {
+			$partes[$i]['estado']='INACTIVO';
+			$partes[$i][5]='INACTIVO';
+		}
+	}
 	echo json_encode($partes,JSON_FORCE_OBJECT);
 });
 
@@ -34,7 +44,7 @@ $app->post('/parte',function($request,$response,$args) use ($app,$db,$main){
 	$cabeza   = filter_var($json->cabeza,FILTER_SANITIZE_STRING);
 	$cuerpo   = filter_var($json->cuerpo,FILTER_SANITIZE_STRING);
 	$fecha    = date('Y-m-d',strtotime(filter_var($json->fecha,FILTER_SANITIZE_STRING)));
-	$hora     = date('h:m:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
+	$hora     = date('h:i:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
 
 	// Intertar una noticia en fotografias.
 	$sql = $db->insert(array('volanta','titulo','bajada','cabeza','cuerpo','fecha','hora','estado'))
@@ -45,21 +55,37 @@ $app->post('/parte',function($request,$response,$args) use ($app,$db,$main){
 
 	if($partesId){
 
-		// Relacionar las fotografias con la noticia.
-		$sql = $db->update()
-			->table('partes_fotografias')
-			->set(array('parte_id'=>$partesId))
-			->whereNull('parte_id');
+		//select count(*) affected from partes_fotografias where parte_id is NULL;
+	    $sql = $db->select()
+	    		  ->from('partes_fotografias')
+	    		  ->whereNull('parte_id');
+	    $query = $sql->execute();
+	    $affected = $query->fetch();
 
-		$affecedRows = $sql->execute();
+	    if($affected){
+			$sql = $db->update()
+				->table('partes_fotografias')
+				->set(array('parte_id'=>$partesId))
+				->whereNull('parte_id');
+			$affecedRows = $sql->execute();
+			if($affecedRows) {
+				echo json_encode(array('result'=>true));
+			} else {
+				echo json_encode(array('result'=>false));
+			}
+		}
 
-		if($affecedRows) {
-			echo json_encode(array('result'=>true));
-		} else {
-			echo json_encode(array('result'=>false));
+		else {
+			if($partesId) {
+				echo json_encode(array('result'=>true));
+			} else {
+				echo json_encode(array('result'=>false));
+			}
 		}
 		
-	} else {
+	}
+
+	else {
 		echo json_encode(array('result'=>false));
 	}
 
@@ -79,7 +105,7 @@ $app->put('/parte/{id}',function($request,$response,$args) use ($app,$db,$main){
 		$cabeza   = filter_var($json->cabeza,FILTER_SANITIZE_STRING);
 		$cuerpo   = filter_var($json->cuerpo,FILTER_SANITIZE_STRING);
 		$fecha    = date('Y-m-d',strtotime(filter_var($json->fecha,FILTER_SANITIZE_STRING)));
-		$hora     = date('h:m:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
+		$hora     = date('h:i:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
 
 		$sql = $db->update(array(
 				'volanta' => $volanta,
@@ -110,24 +136,25 @@ $app->put('/parte/{id}',function($request,$response,$args) use ($app,$db,$main){
 
 // Peticion GET.
 $app->get('/parte/{id}',function($request,$response,$args) use ($db,$app,$main) {
-
 	$id     = filter_var($args['id'],FILTER_SANITIZE_NUMBER_INT);
-
 	$sql    = $db->select(array(
 				"p.volanta volanta",
 				"p.titulo titulo",
 				"p.bajada bajada",
 				"p.cabeza cabeza",
 				"p.cuerpo cuerpo",
-				"date_format(p.fecha,'%d-%m-%Y') fecha",
-				"p.hora hora",
+				"date_format(p.fecha,'%d') dia",
+				"date_format(p.fecha,'%m') mes",
+				"date_format(p.fecha,'%Y') anio",
+				"date_format(p.hora,'%h') hora",
+				"date_format(p.hora,'%i') minuto",
+				"date_format(p.hora,'%s') segundo",
 				"p.estado estado"
 			))
 			->from('partes p')
 			->where('p.id','=',$id);
 	$query  = $sql->execute();
 	$parte = $query->fetch();
-
 	echo json_encode($parte,JSON_FORCE_OBJECT);
 });
 
@@ -197,33 +224,25 @@ $app->delete('/parte/{id}',function($request,$response,$args) use ($app,$db,$mai
 
 // GET: Imprime json con lista de fotografias relacioanda a un parte.
 $app->get('/parte/fotografias/{parteId}', function($request,$response,$args) use ($app,$db,$main){
-
 	$parteId = filter_var($args['parteId'],FILTER_SANITIZE_NUMBER_INT);
-	error_log($parteId);
 	if($parteId){
-		
 		$sql = $db->select(array('fotografias.id id','partes_fotografias.id parteid','fotografias.archivo archivo'))
 			->from('partes_fotografias')
 			->join('fotografias','fotografias.id','=','partes_fotografias.fotografia_id')
 			->where('partes_fotografias.parte_id','=',$parteId);
 		$query = $sql->execute();
 		$fotos = $query->fetchAll();
-
-		if($fotos){
-			$json = array();
-			foreach ($fotos as $f) {
-				$json[] = array(
-					'id'=>$f['id'],
-					'parteid'=>$f['parteid'],
-					'archivo'=>$f['archivo']
-				);
-			}
-			echo json_encode($json,JSON_FORCE_OBJECT);
-		} else {
-			$main->error404();
+		$json = array();
+		foreach ($fotos as $f) {
+			$json[] = array(
+				'id'=>$f['id'],
+				'parteid'=>$f['parteid'],
+				'archivo'=>$f['archivo']
+			);
 		}
-
-	} else {
+		echo json_encode($json,JSON_FORCE_OBJECT);
+	} 
+	else {
 		$main->error404();
 	}
 });

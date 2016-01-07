@@ -4,21 +4,21 @@ angular
 
 		$scope.init = function(){
 			$scope.date = new Date();
-
 			$scope.volanta = '';
 			$scope.titulo  = '';
 			$scope.bajada  = '';
-
 			$scope.cabeza  = '';
 			$scope.cuerpo  = '';
-
 			$scope.dia     = $scope.date.getDate();
 			$scope.mes     = $scope.date.getMonth() +1;
 			$scope.anio    = $scope.date.getFullYear();
-
 			$scope.hora    = $scope.date.getHours();
 			$scope.minuto  = $scope.date.getMinutes();
 			$scope.segundo = $scope.date.getSeconds();
+			$scope.alert = {
+				type:'yellow',
+				text:'Complete el siguiente formulario para ingresar un nuevo parte de prensa.'
+			};
 		};
 
 		$scope.cancelar = function(){
@@ -55,7 +55,7 @@ angular
 
 		$scope.subir = function(){
 
-			if(($scope.titulo.length > 1) && ($scope.cabeza.length > 1)){
+			if(($scope.titulo.length>=1) && ($scope.cabeza.length>=1)){
 					var fileInput = $('#fileInput');					
 					fileInput.on('change',function(){
 						fileList = this.files;
@@ -106,10 +106,6 @@ angular
 		};
 
 		$session.autorize(function(){
-			$scope.alert = {
-				type:'yellow',
-				text:'Complete el siguiente formulario para ingresar un nuevo parte de prensa.'
-			};
 			$session.mainmenu();
 			$scope.init();
 		});
@@ -117,7 +113,6 @@ angular
 	});
 
 window.removeFotografia = function(f,pf,a){
-
 	$.ajax({
 	    url	:'models/partes.php/parte/fotografia/'+f+'/'+pf+'/'+a,	
 	    type:'DELETE',
@@ -131,5 +126,4 @@ window.removeFotografia = function(f,pf,a){
 	    },
 	    error:function(){ window.location.href = '#/login'; }
 	});
-
 };

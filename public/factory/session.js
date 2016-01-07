@@ -64,6 +64,8 @@ angular
                     $('#navbar-logo').html('LEGISLATURA | '+user.nombre);
                     $('#mainmenu').html(html);
                     $("#menuArchivoMain").dropdown();
+                    $("#menuHerramientasMain").dropdown();
+                    $("#menuAyudaMain").dropdown();
                 });
             }
         };
