@@ -2,14 +2,47 @@ angular
 	.module('adminpre')
 	.controller('partes',function($scope,$location,$http,$session){
 
+		$scope.xpos = 0;
+
 		$scope.init = function(){
-			$http.get('models/partes.php/partes')
+			$http.get('models/partes.php/partes/'+$scope.xpos)
 				.success(function(json){
-					$scope.partes = json;
+					$scope.xback  = json.xback;
+					$scope.xnext  = json.xnext;
+					$scope.xlast  = json.xlast;
+					$scope.partes = json.partes;
 				})
 				.error(function(){
 					$location.path('/login');
 				});
+		};
+
+		$scope.first = function(){
+			$scope.xpos = 0;
+			$session.autorize(function(){
+				$scope.init();
+			});
+		};
+
+		$scope.back  = function(){
+			$scope.xpos = $scope.xback;
+			$session.autorize(function(){
+				$scope.init();
+			});
+		};
+
+		$scope.next  = function(){
+			$scope.xpos = $scope.xnext;
+			$session.autorize(function(){
+				$scope.init();
+			});
+		};
+
+		$scope.last  = function(){
+			$scope.xpos = $scope.xlast;
+			$session.autorize(function(){
+				$scope.init();
+			});
 		};
 
 		$scope.nuevo = function(){

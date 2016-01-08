@@ -14,10 +14,19 @@
 		<div class="card-content white">
 
 			<!-- Boton: Nuevo-->
-			<button class="btn orange darken-4" ng-click="nuevo()">
-				Nuevo
-				<i class="icon ion-android-add-circle right"></i>
-			</button>
+			<div class="nav orange darken-4" >
+				<button class="btn orange darken-4 left-align" ng-click="nuevo()">
+					Nuevo
+					<i class="icon ion-android-add-circle right"></i>
+				</button>
+
+				<input class="white orange-text" type="text" ng-model="txtfiltro">
+				<div class="input-field">
+		        	
+		        	<label for="search"><i class="material-icons">search</i></label>
+		        	<i class="material-icons">close</i>
+		        </div>
+			</div>
 
 			<!-- Tabla: Partes -->
 			<table class="table bordered striped hightlight">
@@ -83,8 +92,23 @@
 		</div>
 
 		<!-- Tarjeta: Paginador -->
-		<div class="card-action blue darken-2">
+		<div class="card-action blue darken-2 center">
 
+			<button class="btn blue darken-2 white-text" ng-click="first()">
+				<i class="icons ion-ios-skipbackward"></i>
+			</button>
+			<button class="btn blue darken-2 white-text" ng-click="back()">
+				<i class="icons ion-ios-rewind"></i>
+			</button>
+			<button class="btn blue darken-2 white-text">
+				{{xpos +1}} de {{xlast +1}}
+			</button>
+			<button class="btn blue darken-2 white-text" ng-click="next()">
+				<i class="icons ion-ios-fastforward"></i>
+			</button>
+			<button class="btn blue darken-2 white-text" ng-click="last()">
+				<i class="icons ion-ios-skipforward"></i>
+			</button>
 		</div>
 
 	</div>

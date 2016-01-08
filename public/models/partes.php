@@ -4,7 +4,24 @@
 require_once 'base.php';
 
 // Peticion GET.
-$app->get('/partes',function() use ($db,$app,$main) {
+$app->get('/partes/{xpos}',function($request,$response,$args) use ($db) {
+
+	$xpos = intval(filter_var($args['xpos'],FILTER_SANITIZE_NUMBER_INT));
+
+	$sql    = $db->select()
+			->count()
+			->from('partes');
+	$query  = $sql->execute();
+	$count  = $query->fetch();
+
+	$xlast  = (intval($count[0]/10) -1);
+	if($count[0]%10) $xlast++;
+
+	$xback   = $xpos-1;
+	if($xback<=0) $xback=0;
+
+	$xnext  = $xpos+1;
+	if($xnext>=$xlast) $xnext=$xlast;
 
 	$sql    = $db->select(array(
 				"p.id id",
@@ -16,11 +33,10 @@ $app->get('/partes',function() use ($db,$app,$main) {
 			))
 			->from('partes p')
 			->orderBy('p.id','desc')
-			//->orderBy('p.fecha','desc')
-			//->orderBy('p.hora','desc')
-			->limit(0,10);
+			->limit(($xpos*10),10);
 	$query  = $sql->execute();
 	$partes = $query->fetchAll();
+
 	for($i=0;$i<count($partes);$i++){
 		if($partes[$i]['estado']==1) {
 			$partes[$i]['estado']='ACTIVO';
@@ -31,7 +47,9 @@ $app->get('/partes',function() use ($db,$app,$main) {
 			$partes[$i][5]='INACTIVO';
 		}
 	}
-	echo json_encode($partes,JSON_FORCE_OBJECT);
+	
+	$json = array('xback'=>$xback,'xnext'=>$xnext,'xlast'=>$xlast,'partes'=>$partes);
+	echo json_encode($json,JSON_FORCE_OBJECT);
 });
 
 // Peticion POST
