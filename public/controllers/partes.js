@@ -3,14 +3,66 @@ angular
 	.controller('partes',function($scope,$location,$http,$session){
 
 		$scope.xpos = 0;
+		$scope.titulo = '';
+		$scope.datepicker = $('.datepicker').pickadate({
+			monthsFull:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			monthsShort:['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec'],
+			weekdaysFull:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+			weekdaysShort:['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+			weekdaysLetter:['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+			showMonthsShort: true,
+			today:'Hoy',
+			clear:'Borrar',
+			close:'Cerrar',
+			firstDay: 1,
+			format: 'dd/mm/yyyy',
+			formatSubmit: 'yyyy-mm-dd',
+			selectMonths:true, 
+			selectYears:15,
+			closeOnSelect:true,
+			onSet: function () {
+		        this.close();
+		    }
+		});
+
+		$scope.filtrosAplicar = function(){
+			if($scope.titulo.length>=1 || $scope.datepicker.val()){
+				$scope.xpos = 0;
+				$scope.init();				
+			}
+			else {
+				$scope.alertColor = 'red';
+				$scope.alertText  = 'Debe completar los campos Titulo o Fecha para filtrar la tabla.';
+			}
+		};
+
+		$scope.filtrosCancelar = function(){
+			$scope.xpos=0;
+			$scope.titulo = '';
+			$scope.datepicker.val('');
+			$scope.init();
+		};
 
 		$scope.init = function(){
-			$http.get('models/partes.php/partes/'+$scope.xpos)
+			titulo = 'false';
+			fecha  = 'false';
+			if($scope.titulo.length>=1) titulo = $scope.titulo;
+			if($scope.datepicker.val()) {
+				x = $scope.datepicker.val().split('/');
+				fecha = x[2]+'-'+x[1]+'-'+x[0];
+			}
+			$http.get('models/partes.php/partes/'+$scope.xpos+'/'+titulo+'/'+fecha)
 				.success(function(json){
 					$scope.xback  = json.xback;
 					$scope.xnext  = json.xnext;
 					$scope.xlast  = json.xlast;
 					$scope.partes = json.partes;
+
+					if((json.filtros.titulo.length>=1) && json.filtros.titulo!='false'){
+						$scope.titulo = json.filtros.titulo;
+						$scope.tituloDisplay = json.filtros.titulo;
+					}
+			        
 				})
 				.error(function(){
 					$location.path('/login');

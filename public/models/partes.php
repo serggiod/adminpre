@@ -4,25 +4,52 @@
 require_once 'base.php';
 
 // Peticion GET.
-$app->get('/partes/{xpos}',function($request,$response,$args) use ($db) {
+$app->get('/partes/{xpos}/{titulo}/{fecha}',function($request,$response,$args) use ($db) {
 
 	$xpos = intval(filter_var($args['xpos'],FILTER_SANITIZE_NUMBER_INT));
+	$json  = array(
+		'xback'=>null,
+		'xnext'=>null,
+		'xlast'=>null,
+		'alert'=>array(
+			'color'=>null,
+			'text'=>	null
+		),
+		'filtros'=>array(
+			'titulo'=>null,
+			'fecha'=>null
+		),
+		'partes'=>null
+	);
+	$json['filtros']['titulo'] = filter_var($args['titulo'],FILTER_SANITIZE_STRING);
+	$json['filtros']['fecha']  = filter_var($args['fecha'],FILTER_SANITIZE_STRING);
 
+	// Calculo del paginador.
 	$sql    = $db->select()
 			->count()
 			->from('partes');
+	
+	if(strlen($json['filtros']['titulo']) && ($json['filtros']['titulo']!='false')) {
+		$sql->whereLike('titulo','%%'.$json['filtros']['titulo'].'%');
+	}
+
+	if(strlen($json['filtros']['fecha']) && ($json['filtros']['fecha']!='false')) {
+		$sql->where('fecha','=',$json['filtros']['fecha']);
+	}
+
 	$query  = $sql->execute();
 	$count  = $query->fetch();
 
-	$xlast  = (intval($count[0]/10) -1);
-	if($count[0]%10) $xlast++;
+	$json['xlast']  = (intval($count[0]/10) -1);
+	if($count[0]%10) $json['xlast']++;
 
-	$xback   = $xpos-1;
-	if($xback<=0) $xback=0;
+	$json['xback']   = $xpos-1;
+	if($json['xback']<=0) $json['xback']=0;
 
-	$xnext  = $xpos+1;
-	if($xnext>=$xlast) $xnext=$xlast;
+	$json['xnext']  = $xpos+1;
+	if($json['xnext']>=$json['xlast']) $json['xnext']=$json['xlast'];
 
+	// Calculo del conenido de la tabla.
 	$sql    = $db->select(array(
 				"p.id id",
 				"p.titulo titulo",
@@ -31,12 +58,22 @@ $app->get('/partes/{xpos}',function($request,$response,$args) use ($db) {
 				"p.hora hora",
 				"p.estado estado"
 			))
-			->from('partes p')
-			->orderBy('p.id','desc')
-			->limit(($xpos*10),10);
+			->from('partes p');
+
+	if(strlen($json['filtros']['titulo']) && ($json['filtros']['titulo']!='false')) {
+		$sql->whereLike('titulo','%%'.$json['filtros']['titulo'].'%');
+	}
+
+	if(strlen($json['filtros']['fecha']) && ($json['filtros']['fecha']!='false')) {
+		$sql->where('fecha','=',$json['filtros']['fecha']);
+	}
+
+	$sql->orderBy('p.id','desc')
+		->limit(($xpos*10),10);
 	$query  = $sql->execute();
 	$partes = $query->fetchAll();
 
+	// Saneando tabla.
 	for($i=0;$i<count($partes);$i++){
 		if($partes[$i]['estado']==1) {
 			$partes[$i]['estado']='ACTIVO';
@@ -47,8 +84,8 @@ $app->get('/partes/{xpos}',function($request,$response,$args) use ($db) {
 			$partes[$i][5]='INACTIVO';
 		}
 	}
-	
-	$json = array('xback'=>$xback,'xnext'=>$xnext,'xlast'=>$xlast,'partes'=>$partes);
+
+	$json['partes']=$partes;
 	echo json_encode($json,JSON_FORCE_OBJECT);
 });
 
