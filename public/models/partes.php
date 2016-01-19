@@ -102,34 +102,34 @@ $app->post('/parte',function($request,$response,$args) use ($app,$db,$main){
 	$hora     = date('h:i:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
 
 	// Intertar una noticia en fotografias.
-	$sql = $db->insert(array('volanta','titulo','bajada','cabeza','cuerpo','fecha','hora','estado'))
+	$sql = $db->insert(array('volanta','titulo','bajada','cabeza','cuerpo','fecha','hora','estado','categoria_id'))
         ->into('partes')
-        ->values(array($volanta,$titulo,$bajada,$cabeza,$cuerpo,$fecha,$hora,0));
+        ->values(array($volanta,$titulo,$bajada,$cabeza,$cuerpo,$fecha,$hora,0,1));
     
     $partesId = $sql->execute();
 
 	if($partesId){
 
-		//select count(*) affected from partes_fotografias where parte_id is NULL;
 	    $sql = $db->select()
 	    		  ->from('partes_fotografias')
 	    		  ->whereNull('parte_id');
 	    $query = $sql->execute();
 	    $affected = $query->fetch();
 
-	    if($affected){
+		if($affected){
 			$sql = $db->update()
 				->table('partes_fotografias')
 				->set(array('parte_id'=>$partesId))
 				->whereNull('parte_id');
 			$affecedRows = $sql->execute();
+
 			if($affecedRows) {
 				echo json_encode(array('result'=>true));
 			} else {
 				echo json_encode(array('result'=>false));
 			}
 		}
-
+		
 		else {
 			if($partesId) {
 				echo json_encode(array('result'=>true));
@@ -137,7 +137,6 @@ $app->post('/parte',function($request,$response,$args) use ($app,$db,$main){
 				echo json_encode(array('result'=>false));
 			}
 		}
-		
 	}
 
 	else {

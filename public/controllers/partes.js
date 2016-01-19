@@ -16,6 +16,7 @@ angular
 			close:'Cerrar',
 			firstDay: 1,
 			format: 'dd/mm/yyyy',
+			dateFormat: 'yyyy-mm-dd',
 			formatSubmit: 'yyyy-mm-dd',
 			selectMonths:true, 
 			selectYears:15,
