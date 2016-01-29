@@ -2,6 +2,37 @@ angular
 	.module('adminpre')
 	.controller('partesVisualizar',function($scope,$location,$http,$routeParams,$session){
 
+		$scope.editorCabeza = {
+			theme			 : 'gray',
+			iframe           : false,
+			height			 : 260,
+			heightMin        : 260,
+			heightMax        : 260,
+			disableRightClick: true,
+			editInPopup      : false,
+			placeholderText  : ' ',
+	        toolbarButtons   : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsMD : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsSM : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        htmlRemoveTags   : ['script', 'style', 'base'],
+	        pasteAllowLocalImages: false
+	    };
+	    $scope.editorCuerpo = {
+			theme			 : 'gray',
+			iframe           : false,
+			height			 : 260,
+			heightMin        : 260,
+			heightMax        : 260,
+			disableRightClick: true,
+			editInPopup      : false,
+			placeholderText  : ' ',
+	        toolbarButtons   : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsMD : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsSM : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        htmlRemoveTags   : ['script', 'style', 'base'],
+	        pasteAllowLocalImages: false
+	    };
+
 		$scope.init = function(){
 			$scope.id = $routeParams.id;
 			$scope.alert = {};
@@ -23,6 +54,10 @@ angular
 							$scope.fotografias = json;
 							$scope.alert.type = 'blue';
 							$scope.alert.text = 'Visualizando un parte de prensa.';
+							$scope.editorCabeza.froalaEditor('toolbar.disable');
+							$scope.editorCuerpo.froalaEditor('toolbar.disable');
+							$scope.editorCabeza.froalaEditor('edit.off');
+							$scope.editorCuerpo.froalaEditor('edit.off');
 						})
 						.error(function(){
 							$session.destroy();

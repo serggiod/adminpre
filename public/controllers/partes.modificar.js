@@ -2,6 +2,38 @@ angular
 	.module('adminpre')
 	.controller('partesModificar',function($scope,$location,$http,$routeParams,$session){
 
+		$scope.editorCabeza = {
+			theme			 : 'gray',
+			iframe           : false,
+			height			 : 260,
+			heightMin        : 260,
+			heightMax        : 260,
+			disableRightClick: true,
+			editInPopup      : false,
+			placeholderText  : ' ',
+	        toolbarButtons   : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsMD : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsSM : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        htmlRemoveTags   : ['script', 'style', 'base'],
+	        pasteAllowLocalImages: false
+	    };
+
+	    $scope.editorCuerpo = {
+			theme			 : 'gray',
+			iframe           : false,
+			height			 : 260,
+			heightMin        : 260,
+			heightMax        : 260,
+			disableRightClick: true,
+			editInPopup      : false,
+			placeholderText  : ' ',
+	        toolbarButtons   : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsMD : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsSM : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        htmlRemoveTags   : ['script', 'style', 'base'],
+	        pasteAllowLocalImages: false
+	    };
+
 		$scope.init = function(){
 			$scope.id = $routeParams.id;
 			$scope.alert = {};
@@ -10,7 +42,8 @@ angular
 					$scope.volanta = json.volanta;
 					$scope.titulo  = json.titulo;
 					$scope.bajada  = json.bajada;
-					$scope.cabeza  = json.cabeza;
+					$scope.editorCabeza.froalaEditor('html.set',json.cabeza);
+					$scope.editorCuerpo.froalaEditor('html.set',json.cuerpo);
 					$scope.cuerpo  = json.cuerpo;
 					$scope.dia     = parseInt(json.dia);
 					$scope.mes     = parseInt(json.mes);
@@ -43,8 +76,8 @@ angular
 					volanta:$scope.volanta,
 					titulo:$scope.titulo,
 					bajada:$scope.bajada,
-					cabeza:$scope.cabeza,
-					cuerpo:$scope.cuerpo,
+					cabeza:$scope.editorCabeza.froalaEditor('html.get'),
+					cuerpo:$scope.editorCuerpo.froalaEditor('html.get'),
 					fecha:$scope.anio+'-'+$scope.mes+'-'+$scope.dia,
 					hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo
 				};

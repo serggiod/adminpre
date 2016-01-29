@@ -2,6 +2,38 @@ angular
 	.module('adminpre')
 	.controller('partesNuevo',function($scope,$location,$http,$session){
 
+		$scope.editorCabeza = {
+			theme			 : 'gray',
+			iframe           : false,
+			height			 : 260,
+			heightMin        : 260,
+			heightMax        : 260,
+			disableRightClick: true,
+			editInPopup      : false,
+			placeholderText  : ' ',
+	        toolbarButtons   : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsMD : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsSM : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        htmlRemoveTags   : ['script', 'style', 'base'],
+	        pasteAllowLocalImages: false
+	    };
+
+	    $scope.editorCuerpo = {
+			theme			 : 'gray',
+			iframe           : false,
+			height			 : 260,
+			heightMin        : 260,
+			heightMax        : 260,
+			disableRightClick: true,
+			editInPopup      : false,
+			placeholderText  : ' ',
+	        toolbarButtons   : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsMD : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        toolbarButtonsSM : ['bold','italic','underline','|','align','|','paragraphFormat'],
+	        htmlRemoveTags   : ['script', 'style', 'base'],
+	        pasteAllowLocalImages: false
+	    };
+
 		$scope.init = function(){
 			$scope.date = new Date();
 			$scope.volanta = '';
@@ -31,8 +63,8 @@ angular
 					volanta:$scope.volanta,
 					titulo:$scope.titulo,
 					bajada:$scope.bajada,
-					cabeza:$scope.cabeza,
-					cuerpo:$scope.cuerpo,
+					cabeza:$scope.editorCabeza.froalaEditor('html.get'),
+					cuerpo:$scope.editorCuerpo.froalaEditor('html.get'),
 					fecha:$scope.anio+'-'+$scope.mes+'-'+$scope.dia,
 					hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo
 				};

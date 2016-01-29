@@ -96,8 +96,8 @@ $app->post('/parte',function($request,$response,$args) use ($app,$db,$main){
 	$volanta  = filter_var($json->volanta,FILTER_SANITIZE_STRING);
 	$titulo   = filter_var($json->titulo,FILTER_SANITIZE_STRING);
 	$bajada   = filter_var($json->bajada,FILTER_SANITIZE_STRING);
-	$cabeza   = filter_var($json->cabeza,FILTER_SANITIZE_STRING);
-	$cuerpo   = filter_var($json->cuerpo,FILTER_SANITIZE_STRING);
+	$cabeza   = htmlentities($json->cabeza);
+	$cuerpo   = htmlentities($json->cuerpo);
 	$fecha    = date('Y-m-d',strtotime(filter_var($json->fecha,FILTER_SANITIZE_STRING)));
 	$hora     = date('h:i:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
 
@@ -155,8 +155,8 @@ $app->put('/parte/{id}',function($request,$response,$args) use ($app,$db,$main){
 		$json     = json_decode($request->getBody());
 		$volanta  = filter_var($json->volanta,FILTER_SANITIZE_STRING);
 		$titulo   = filter_var($json->titulo,FILTER_SANITIZE_STRING);
-		$bajada   = filter_var($json->bajada,FILTER_SANITIZE_STRING);
-		$cabeza   = filter_var($json->cabeza,FILTER_SANITIZE_STRING);
+		$bajada   = htmlentities($json->bajada);
+		$cabeza   = htmlentities($json->cabeza);
 		$cuerpo   = filter_var($json->cuerpo,FILTER_SANITIZE_STRING);
 		$fecha    = date('Y-m-d',strtotime(filter_var($json->fecha,FILTER_SANITIZE_STRING)));
 		$hora     = date('h:i:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
@@ -209,6 +209,10 @@ $app->get('/parte/{id}',function($request,$response,$args) use ($db,$app,$main) 
 			->where('p.id','=',$id);
 	$query  = $sql->execute();
 	$parte = $query->fetch();
+	$parte["cabeza"] = html_entity_decode($parte["cabeza"]);
+	$parte[3] = html_entity_decode($parte[3]);
+	$parte["cuerpo"] = html_entity_decode($parte["cuerpo"]);
+	$parte[4] = html_entity_decode($parte[4]);
 	echo json_encode($parte,JSON_FORCE_OBJECT);
 });
 
