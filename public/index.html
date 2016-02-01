@@ -12,6 +12,34 @@
         	border: 0px;
         	overflow: scroll-y;
     	}
+        @font-face {
+          font-family:'Material Icons';
+          font-style:normal;
+          font-weight:400;
+          src:
+            local('Material Icons'), 
+            local('MaterialIcons-Regular'), 
+            url(/jscdn/Materialize/dist/font/material-design-icons/Material-Design-Icons.eot) format('eot'),
+            url(/jscdn/Materialize/dist/font/material-design-icons/Material-Design-Icons.svg) format('svg'),
+            url(/jscdn/Materialize/dist/font/material-design-icons/Material-Design-Icons.ttf) format('ttf'),
+            url(/jscdn/Materialize/dist/font/material-design-icons/Material-Design-Icons.woff) format('woff'),
+            url(/jscdn/Materialize/dist/font/material-design-icons/Material-Design-Icons.woff) format('woff2');
+        }
+        .material-icons {
+          font-family: 'Material Icons';
+          font-weight: normal;
+          font-style: normal;
+          font-size: 24px;
+          line-height: 1;
+          letter-spacing: normal;
+          text-transform: none;
+          display: inline-block;
+          white-space: nowrap;
+          word-wrap: normal;
+          direction: ltr;
+          -moz-font-feature-settings: 'liga';
+          -moz-osx-font-smoothing: grayscale;
+        }
     	.backimg{
     		background-image:url('img/background.jpg');
     		background-repeat: repeat-x;
@@ -58,38 +86,37 @@
     </div>
 
 	<!-- Libreria JS: JQuery -->
-	<script type="text/javascript" src="jslib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="/jscdn/jquery/dist/jquery.min.js"></script>
 
 	<!-- Libreria JS: CryptoJS.MD5 -->
-	<script type="text/javascript" src="jslib/crypto-js/build/components/core-min.js"></script>
-	<script type="text/javascript" src="jslib/crypto-js/build/components/md5-min.js"></script>	
+	<script type="text/javascript" src="/jscdn/crypto-js/build/components/core-min.js"></script>
+	<script type="text/javascript" src="/jscdn/crypto-js/build/components/md5-min.js"></script>	
 
 	<!-- Libreria CSS: Materialize -->
-	<script type="text/javascript" src="jslib/materialize/dist/js/materialize.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="jslib/materialize/dist/css/materialize.min.css"/>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<script type="text/javascript" src="/jscdn/Materialize/dist/js/materialize.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/jscdn/Materialize/dist/css/materialize.min.css"/>
 
     <!-- Libreria CSS: Ion Icons -->
     <link rel="stylesheet" type="text/css" href="css/ionicons.min.css"/>
 
     <!-- Libreria FROALA EDITOR: froala -->
-    <link rel="stylesheet" type="text/css" href="jslib/froala-wysiwyg-editor/css/froala_editor.min.css"/>
-    <link rel="stylesheet" type="text/css" href="jslib/froala-wysiwyg-editor/css/froala_style.min.css"/>
-    <link rel="stylesheet" type="text/css" href="jslib/froala-wysiwyg-editor/css/themes/gray.min.css"/>
-    <script type="text/javascript" src="jslib/froala-wysiwyg-editor/js/froala_editor.min.js"></script>
-    <script type="text/javascript" src="jslib/froala-wysiwyg-editor/js/plugins/align.min.js"></script>
-    <script type="text/javascript" src="jslib/froala-wysiwyg-editor/js/plugins/paragraph_format.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/jscdn/froala-wysiwyg-editor/css/froala_editor.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/jscdn/froala-wysiwyg-editor/css/froala_style.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/jscdn/froala-wysiwyg-editor/css/themes/gray.min.css"/>
+    <script type="text/javascript" src="/jscdn/froala-wysiwyg-editor/js/froala_editor.min.js"></script>
+    <script type="text/javascript" src="/jscdn/froala-wysiwyg-editor/js/plugins/align.min.js"></script>
+    <script type="text/javascript" src="/jscdn/froala-wysiwyg-editor/js/plugins/paragraph_format.min.js"></script>
     
     <!-- Libreria FONT AWSOME: AWESOME -->
-    <link rel="stylesheet" type="text/css" href="jslib/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/jscdn/font-awesome/css/font-awesome.min.css"/>
 
 	<!-- Libreria JS: Angular -->
-	<script type="text/javascript" src="jslib/angular/angular.min.js"></script>
-	<script type="text/javascript" src="jslib/angular-route/angular-route.min.js"></script>
-	<script type="text/javascript" src="jslib/angular-sanitize/angular-sanitize.min.js"></script>
-	<script type="text/javascript" src="jslib/angular-materialize/src/angular-materialize.js"></script>
-    <script type="text/javascript" src="jslib/angular-froala/src/angular-froala.js"></script>
-    <script type="text/javascript" src="jslib/angular-froala/src/froala-sanitize.js"></script>
+	<script type="text/javascript" src="/jscdn/angular/angular.min.js"></script>
+	<script type="text/javascript" src="/jscdn/angular-route/angular-route.min.js"></script>
+	<script type="text/javascript" src="/jscdn/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="/jscdn/angular-materialize/src/angular-materialize.js"></script>
+    <script type="text/javascript" src="/jscdn/angular-froala/src/angular-froala.js"></script>
+    <script type="text/javascript" src="/jscdn/angular-froala/src/froala-sanitize.js"></script>
 
 	<!-- Aplicacion Angular -->
 	<script type="text/javascript" src="application/application.js"></script>
