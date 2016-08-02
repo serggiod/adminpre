@@ -4,6 +4,14 @@ angular
 
 		$scope.xpos = 0;
 		$scope.titulo = '';
+		$scope.categorias = $session.getUser().categorias;
+		$scope.categoriaId = $scope.categorias[0].categoria;
+		console.log($scope.categorias,$scope.categoriaId);
+
+		$scope.categoriaSelected = function(){
+			console.log($scope.categoriaId);
+		};
+
 		$scope.datepicker = $('.datepicker').pickadate({
 			monthsFull:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
 			monthsShort:['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec'],

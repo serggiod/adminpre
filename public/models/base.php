@@ -66,4 +66,5 @@ $main = new main();
 $app = new \Slim\App;
 
 // Instancia de las base de datos Slim.
-$db  = new \Slim\PDO\Database('mysql:host=localhost;dbname=test;charset=utf8','test','test');
+$dns   = explode('|',file_get_contents('../../../dblegweb.dsn'));
+$db  = new \Slim\PDO\Database(trim($dns[0]),trim($dns[1]),trim($dns[2]));

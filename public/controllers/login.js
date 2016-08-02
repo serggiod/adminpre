@@ -20,7 +20,7 @@ angular
 				json ={
 					user:$scope.usuario,
 					pass:CryptoJS.MD5($scope.password).toString()
-				}
+				};
 				$http.post('models/login.php/',json)
 				.success(function(json){
 					if(json.result){

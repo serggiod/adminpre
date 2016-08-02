@@ -14,10 +14,6 @@ angular
 		        templateUrl:'views/logout.html',
 		        controller:'logout'
 		    })
-		    .when('/password',{
-		        templateUrl:'views/password.html',
-		        controller:'password'
-		    })
 		    .when('/acercade',{
 		        templateUrl:'views/acercade.html',
 		        controller:'acercade'

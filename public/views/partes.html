@@ -13,16 +13,30 @@
 		<!-- Tarjeta: Contenido -->
 		<div class="card-content white">
 
+
+			<!-- Lista: Categorias -->
+			<select class="browser-default" ng-model="categoriaId" ng-change="categoriaSelected()">	
+				<option ng-repeat="c in categorias" value="{{c.categoria}}">{{c.nombre}}</option>
+			</select>
+			<!-- /Lista: Categorias -->
+
 			<!-- Boton: Nuevo-->
-			<div class="nav orange darken-4" >
+			<div class="nav orange darken-4">
+
+				
+
+
 				<button class="btn orange darken-4 left-align" ng-click="nuevo()">
 					Nuevo
 					<i class="icon ion-android-add-circle right"></i>
 				</button>
+
 			</div>
 
 			<!-- Tarjeta: Filtros -->
 			<div class="card-action white">
+
+			
 
 				<!-- Alenta -->
 				<div class="row">
