@@ -4,17 +4,14 @@
 require_once 'base.php';
 
 // Peticion GET.
-$app->get('/partes/{xpos}/{titulo}/{fecha}',function($request,$response,$args) use ($db) {
+$app->get('/partes/{xpos}/{titulo}/{fecha}/{categoriaId}',function($request,$response,$args) use ($db) {
 
 	$xpos = intval(filter_var($args['xpos'],FILTER_SANITIZE_NUMBER_INT));
+	$categoriaId = intval(filter_var($args['categoriaId'],FILTER_SANITIZE_NUMBER_INT));
 	$json  = array(
 		'xback'=>null,
 		'xnext'=>null,
 		'xlast'=>null,
-		'alert'=>array(
-			'color'=>null,
-			'text'=>	null
-		),
 		'filtros'=>array(
 			'titulo'=>null,
 			'fecha'=>null
@@ -27,7 +24,8 @@ $app->get('/partes/{xpos}/{titulo}/{fecha}',function($request,$response,$args) u
 	// Calculo del paginador.
 	$sql    = $db->select()
 			->count()
-			->from('partes');
+			->from('partes')
+			->where('categoria_id','=',$categoriaId);
 	
 	if(strlen($json['filtros']['titulo']) && ($json['filtros']['titulo']!='false')) {
 		$sql->whereLike('titulo','%%'.$json['filtros']['titulo'].'%');
@@ -49,7 +47,7 @@ $app->get('/partes/{xpos}/{titulo}/{fecha}',function($request,$response,$args) u
 	$json['xnext']  = $xpos+1;
 	if($json['xnext']>=$json['xlast']) $json['xnext']=$json['xlast'];
 
-	// Calculo del conenido de la tabla.
+	// Calculo del contenido de la tabla.
 	$sql    = $db->select(array(
 				"p.id id",
 				"p.titulo titulo",
@@ -58,7 +56,8 @@ $app->get('/partes/{xpos}/{titulo}/{fecha}',function($request,$response,$args) u
 				"p.hora hora",
 				"p.estado estado"
 			))
-			->from('partes p');
+			->from('partes p')
+			->where('p.categoria_id','=',$categoriaId);
 
 	if(strlen($json['filtros']['titulo']) && ($json['filtros']['titulo']!='false')) {
 		$sql->whereLike('titulo','%%'.$json['filtros']['titulo'].'%');
@@ -76,17 +75,28 @@ $app->get('/partes/{xpos}/{titulo}/{fecha}',function($request,$response,$args) u
 	// Saneando tabla.
 	for($i=0;$i<count($partes);$i++){
 		if($partes[$i]['estado']==1) {
+			$partes[$i]['titulo']=utf8_encode($partes[$i]['titulo']);
 			$partes[$i]['estado']='ACTIVO';
-			$partes[$i][5]='ACTIVO';
+			unset($partes[$i][0]);
+			unset($partes[$i][1]);
+			unset($partes[$i][2]);
+			unset($partes[$i][3]);
+			unset($partes[$i][4]);
+			unset($partes[$i][5]);
 		}
 		else {
 			$partes[$i]['estado']='INACTIVO';
-			$partes[$i][5]='INACTIVO';
+			unset($partes[$i][0]);
+			unset($partes[$i][1]);
+			unset($partes[$i][2]);
+			unset($partes[$i][3]);
+			unset($partes[$i][4]);
+			unset($partes[$i][5]);
 		}
 	}
-
 	$json['partes']=$partes;
 	echo json_encode($json,JSON_FORCE_OBJECT);
+	die;
 });
 
 // Peticion POST
@@ -100,11 +110,12 @@ $app->post('/parte',function($request,$response,$args) use ($app,$db,$main){
 	$cuerpo   = htmlentities($json->cuerpo);
 	$fecha    = date('Y-m-d',strtotime(filter_var($json->fecha,FILTER_SANITIZE_STRING)));
 	$hora     = date('h:i:s',strtotime(filter_var($json->hora,FILTER_SANITIZE_STRING)));
+	$categoria= intval(filter_var($json->categoria,FILTER_SANITIZE_NUMBER_INT));
 
 	// Intertar una noticia en fotografias.
 	$sql = $db->insert(array('volanta','titulo','bajada','cabeza','cuerpo','fecha','hora','estado','categoria_id'))
         ->into('partes')
-        ->values(array($volanta,$titulo,$bajada,$cabeza,$cuerpo,$fecha,$hora,0,1));
+        ->values(array($volanta,$titulo,$bajada,$cabeza,$cuerpo,$fecha,$hora,0,$categoria));
     
     $partesId = $sql->execute();
 

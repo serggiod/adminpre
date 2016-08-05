@@ -5,11 +5,20 @@ angular
 		$scope.xpos = 0;
 		$scope.titulo = '';
 		$scope.categorias = $session.getUser().categorias;
-		$scope.categoriaId = $scope.categorias[0].categoria;
-		console.log($scope.categorias,$scope.categoriaId);
+
+		// Establecer categoria por defecto.
+		console.log(parseInt($session.get('categoriaId')));
+		if($session.get('categoriaId')){
+			$scope.categoriaId = $session.get('categoriaId');
+		}
+		else {
+			$scope.categoriaId = $scope.categorias[0].categoria;
+			$session.set('categoriaId',$scope.categoriaId);
+		}
 
 		$scope.categoriaSelected = function(){
-			console.log($scope.categoriaId);
+			$session.set('categoriaId',$scope.categoriaId);
+			$scope.init();
 		};
 
 		$scope.datepicker = $('.datepicker').pickadate({
@@ -60,7 +69,7 @@ angular
 				x = $scope.datepicker.val().split('/');
 				fecha = x[2]+'-'+x[1]+'-'+x[0];
 			}
-			$http.get('models/partes.php/partes/'+$scope.xpos+'/'+titulo+'/'+fecha)
+			$http.get('models/partes.php/partes/'+$scope.xpos+'/'+titulo+'/'+fecha+'/'+$scope.categoriaId)
 				.success(function(json){
 					$scope.xback  = json.xback;
 					$scope.xnext  = json.xnext;

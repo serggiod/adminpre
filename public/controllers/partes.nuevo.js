@@ -47,6 +47,7 @@ angular
 			$scope.hora    = $scope.date.getHours();
 			$scope.minuto  = $scope.date.getMinutes();
 			$scope.segundo = $scope.date.getSeconds();
+			$scope.categoriaId = parseInt($session.get('categoriaId'));
 			$scope.alert = {
 				type:'yellow',
 				text:'Complete el siguiente formulario para ingresar un nuevo parte de prensa.'
@@ -66,7 +67,8 @@ angular
 					cabeza:$scope.editorCabeza.froalaEditor('html.get'),
 					cuerpo:$scope.editorCuerpo.froalaEditor('html.get'),
 					fecha:$scope.anio+'-'+$scope.mes+'-'+$scope.dia,
-					hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo
+					hora:$scope.hora+':'+$scope.minuto+':'+$scope.segundo,
+					categoria:$scope.categoriaId
 				};
 				$http.post('models/partes.php/parte',json)
 					.success(function(json){
