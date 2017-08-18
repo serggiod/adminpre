@@ -1,111 +1,109 @@
 <div class="col s12 m12 l12">
-	<div class="card white z-depth-2">
+    <div class="card white z-depth-2">
 
-		<!-- tarjeta: Titulo -->
-		<div class="card grey lighten-2 z-depth-2 center">
-			<div class="card-action">
-				<h4>
-					Partes de Prensa | Modificar
-				</h4>
-			</div>
-		</div>
+        <!-- tarjeta: Titulo -->
+        <div class="card grey lighten-2 z-depth-2 center">
+            <div class="card-action">
+                <h4>
+                    Partes de Prensa | Modificar
+                </h4>
+            </div>
+        </div>
 
-		<!-- Mensaje de alerta -->
-		<div class="card-action {{alert.type}} lighten-4">
-			{{alert.text}}
-		</div>
+        <!-- Mensaje de alerta -->
+        <div class="card-action {{alert.type}} lighten-4">
+            {{alert.text}}
+        </div>
 
-		<!-- Tarjeta: Contenido -->
-		<div class="card-content white">
+        <!-- Tarjeta: Contenido -->
+        <div class="card-content white">
 
-			<!-- Volanta -->
-				<label for="volanta">Volanta:</label>
-			<div class="input-field">
-				<input id="volanta" type="text" maxlength="120" ng-model="volanta" style="width:400px;">
-			</div>
+            <!-- Volanta -->
+            <label for="volanta">Volanta:</label>
+            <div class="input-field">
+                <input id="volanta" type="text" maxlength="120" ng-model="volanta" style="width:400px;">
+            </div>
 
 
-			<!-- Titulo -->
-			<label for="titulo">Titulo:</label>
-			<div class="input-field">
-				<input id="titulo" type="text" maxlength="250" ng-model="titulo" style="width:450px;">
-			</div>
+            <!-- Titulo -->
+            <label for="titulo">Titulo:</label>
+            <div class="input-field">
+                <input id="titulo" type="text" maxlength="250" ng-model="titulo" style="width:450px;">
+            </div>
 
-			<!-- Bajada -->
-			<label for="bajada">Bajada:</label>
-			<div class="input-field">
-				<input id="bajada" type="text" maxlength="250" ng-model="bajada" style="width:400px;">
-			</div>
+            <!-- Bajada -->
+            <label for="bajada">Bajada:</label>
+            <div class="input-field">
+                <input id="bajada" type="text" maxlength="250" ng-model="bajada" style="width:400px;">
+            </div>
 
-			<!-- Cabeza -->
-			<label for="cabeza">Cabeza:</label>
-			<div class="input-field">
-				<textarea froala="editorCabeza" id="cabeza" ng-model="cabeza" class="materialize-textarea" style="width:500px;height:120px;"></textarea>
-			</div>
+            <!-- Cabeza -->
+            <div class="input-field">
+                <text-angular ta-toolbar="toolbar" id="cabeza" ng-model="cabeza" class="materialize-textarea" style="width:500px;height:120px;"></text-angular>
+                <label for="cabeza">Cabeza:</label>
+            </div>
 
-			<!-- Cuerpo -->
-			<label    for="cuerpo">Cuerpo:</label>
-			<div class="input-field">
-				<textarea froala="editorCuerpo" id="cuerpo" ng-model="cuerpo" class="materialize-textarea" style="width:500px;height:170px;"></textarea>
-			</div>
+            <!-- Cuerpo -->
+            <div class="input-field">
+                <text-angular ta-toolbar="toolbar" id="cuerpo" ng-model="cuerpo" class="materialize-textarea" style="width:500px;height:170px;"></text-angular>
+                <label for="cuerpo">Cuerpo:</label>
+            </div>
 
-			<!-- Fecha -->
-			<label for="fecha">Fecha:</label>
-			<div class="input-field">
-				<fieldset id="fecha">
-					<br/>
-					<input type="number" min="1" max="31" ng-model="dia" style="width:90px;">
-					<span  style="width:50px;">/</span>
-					<input type="number" min="1" max="12" ng-model="mes" style="width:90px;">
-					<span  style="width:50px;">/</span>
-					<input type="number" min="1975" max="2016" ng-model="anio" style="width:90px;">
-				</fieldset>
-			</div>
+            <!-- Fecha -->
+            <label for="fecha">Fecha:</label>
+            <div class="input-field">
+                <fieldset id="fecha">
+                    <br/>
+                    <input type="number" min="1" max="31" ng-model="dia" style="width:90px;">
+                    <span style="width:50px;">/</span>
+                    <input type="number" min="1" max="12" ng-model="mes" style="width:90px;">
+                    <span style="width:50px;">/</span>
+                    <input type="number" min="1975" max="2016" ng-model="anio" style="width:90px;">
+                </fieldset>
+            </div>
 
-			<!-- Hora -->
-			<label for="hora">Hora:</label>
-			<div class="input-field">
-				<fieldset id="hora">
-					<br/>
-					<input type="number" min="0" max="23" ng-model="hora" style="width:90px;">
-					<span  style="width:50px;">:</span>
-					<input type="number" min="0" max="59" ng-model="minuto" style="width:90px;">
-					<span  style="width:50px;">:</span>
-					<input type="number" min="0" max="59" ng-model="segundo" style="width:90px;">
-				</fieldset>
-			</div>
+            <!-- Hora -->
+            <label for="hora">Hora:</label>
+            <div class="input-field">
+                <fieldset id="hora">
+                    <br/>
+                    <input type="number" min="0" max="23" ng-model="hora" style="width:90px;">
+                    <span style="width:50px;">:</span>
+                    <input type="number" min="0" max="59" ng-model="minuto" style="width:90px;">
+                    <span style="width:50px;">:</span>
+                    <input type="number" min="0" max="59" ng-model="segundo" style="width:90px;">
+                </fieldset>
+            </div>
 
-			<label for="fotografias">Fotografias:</label>
-			<!-- Fotografias -->
-			<div class="input-field">
-				<fieldset id="fotografias">
-					<div id="fotografiasDisplay" style="width:500px;height:120px;overflow:auto;">
-						<a  ng-repeat="f in fotografias" id="{{f.id}}{{f.parteid}}" ng-click="removeFotografia(f.id,f.parteid,f.archivo)"><img src="/public/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;"/></a>
-					</div>
-				</fieldset>
-				
-			</div>
-			
-			<input id="fileInput" type="file" style="display:none;" multiple="true"/>			
-		</div>
+            <label for="fotografias">Fotografias:</label>
+            <!-- Fotografias -->
+            <div class="input-field">
+                <fieldset id="fotografias">
+                    <div id="fotografiasDisplay" style="width:500px;height:120px;overflow:auto;">
+                        <a ng-repeat="f in fotografias" id="{{f.id}}{{f.parteid}}" ng-click="removeFotografia(f.id,f.parteid,f.archivo)"><img src="http://www.legislaturajujuy.gov.ar/img/fotografias/{{f.archivo}}" width="120" style="margin:5px;float:left;" /></a>
+                    </div>
+                </fieldset>
 
-		<!-- Tarjeta: Botones -->
-		<div class="card-action blue darken-2">
-			<button type="button" class="btn orange darken-4"  ng-click="cancelar()">
+            </div>
+        </div>
+
+        <!-- Tarjeta: Botones -->
+        <div class="card-action blue darken-2">
+            <button type="button" class="btn orange darken-4" ng-click="cancelar()">
 				Cancelar
-				<i class="icons ion-android-cancel right"></i>
+				<i class="icons ion-android-cancel"></i>
 			</button>
 
-			<button type="button" class="btn blue darken-4" ng-click="subir()">
+            <button type="button" class="btn blue darken-4" ng-click="subir()">
 				Subir Fotograf&iacute;as
-				<i class="icons ion-android-upload right"></i>
+				<i class="icons ion-android-upload"></i>
 			</button>
 
-			<button type="button" class="btn orange darken-4" ng-click="aceptar()" >
+            <button type="button" class="btn orange darken-4" ng-click="aceptar()">
 				Aceptar
 				<i class="icons ion-android-send"></i>
 			</button>
-		</div>
+        </div>
 
-	</div>
+    </div>
 </div>

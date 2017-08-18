@@ -1,27 +1,8 @@
 angular
-	.module('adminpre',['ui.materialize','ngRoute','froala'])
+	.module('legapp',['ui.materialize','ngRoute','ngSanitize','textAngular'])
 	.config(function($routeProvider){
 	    $routeProvider
-		    .when('/',{
-		        templateUrl:'views/login.html',
-		        controller:'login'
-		    })
-		    .when('/login',{
-		        templateUrl:'views/login.html',
-		        controller:'login'
-		    })
-		    .when('/logout',{
-		        templateUrl:'views/logout.html',
-		        controller:'logout'
-		    })
-		    .when('/acercade',{
-		        templateUrl:'views/acercade.html',
-		        controller:'acercade'
-		    })
-		    .when('/manual',{
-		        templateUrl:'views/manual.html',
-		        controller:'manual'
-		    })
+		    .when('/',{redirectTo:'/partes'})
 		    .when('/partes',{
 		        templateUrl:'views/partes.html',
 		        controller:'partes'

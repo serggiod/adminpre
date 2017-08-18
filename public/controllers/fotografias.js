@@ -1,5 +1,5 @@
 angular
-	.module('adminpre')
+	.module('legapp')
 	.controller('fotografias',function($scope,$location,$http,$routeParams){
 		$scope.subir = function(){
 			archivos = $('#archivos');

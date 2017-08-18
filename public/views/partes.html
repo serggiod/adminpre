@@ -1,110 +1,92 @@
-<div class="col s12 m12 l12">
-	<div class="card white z-depth-2">
+<div class="col s12 m12 l12" ng-show="display">
+    <div class="card white z-depth-2">
 
-		<!-- tarjeta: Titulo -->
-		<div class="card grey lighten-2 z-depth-2 center">
-			<div class="card-action">
-				<h4>
-					Partes de Prensa | Lista
-				</h4>
-			</div>
-		</div>
+        <!-- tarjeta: Titulo -->
+        <div class="card grey lighten-2 z-depth-2 center">
+            <div class="card-action">
+                <h4>
+                    Partes de Prensa | Lista
+                </h4>
+            </div>
+        </div>
 
-		<!-- Tarjeta: Contenido -->
-		<div class="card-content white">
+        <!-- Tarjeta: Contenido -->
+        <div class="card-content white">
 
-
-			<!-- Lista: Categorias -->
-			<select class="browser-default" ng-model="categoriaId" ng-change="categoriaSelected()">	
-				<option ng-repeat="c in categorias" value="{{c.categoria}}">{{c.nombre}}</option>
-			</select>
-			<!-- /Lista: Categorias -->
-
-			<!-- Boton: Nuevo-->
-			<div class="nav orange darken-4">
-
-				
-
-
-				<button class="btn orange darken-4 left-align" ng-click="nuevo()">
+            <!-- Boton: Nuevo-->
+            <div class="nav orange darken-4">
+                <button class="btn orange darken-4 left-align" ng-click="nuevo()">
 					Nuevo
 					<i class="icon ion-android-add-circle right"></i>
 				</button>
+            </div>
 
-			</div>
+            <!-- Tarjeta: Filtros -->
+            <div class="card-action white">
 
-			<!-- Tarjeta: Filtros -->
-			<div class="card-action white">
+                <!-- Alerta -->
+                <div class="row">
+                    <div class="col s12 m12 l12 {{alertColor}} lighten-4">
+                        {{alertText}}
+                    </div>
+                </div>
 
-			
+                <div class="row">
 
-				<!-- Alenta -->
-				<div class="row">
-					<div class="col s12 m12 l12 {{alertColor}} lighten-4">
-						{{alertText}}
-					</div>
-				</div>
+                    <!-- Titulo -->
+                    <div class="col s4 m4 l4">
+                        <label for="titulo">Titulo:</label>
+                        <div class="input-field">
+                            <input s type="text" maxlength="250" ng-model="titulo">
+                        </div>
+                    </div>
 
-				<div class="row">
+                    <!-- Fecha -->
+                    <div class="col s4 m4 l4">
+                        <label for="fecha">Fecha:</label>
+                        <div class="input-field">
+                            <input id="fecha" type="date" class="datepicker">
+                        </div>
+                    </div>
 
-					<!-- Titulo -->
-					<div class="col s4 m4 l4">
-						<label for="titulo">Titulo:</label>
-						<div class="input-field">
-							<input id="titulo" type="text" maxlength="250" ng-model="titulo">
-						</div>
-					</div>
-
-					<!-- Fecha -->
-					<div class="col s4 m4 l4">
-						<label for="fecha">Fecha:</label>
-						<div class="input-field">
-							<input id="fecha" type="date" class="datepicker">
-						</div>
-					</div>
-
-					<!-- Botones -->
-					<div class="col s4 m4 l4">
-						<button type="button" class="btn blue darken-2"  ng-click="filtrosAplicar()">
+                    <!-- Botones -->
+                    <div class="col s4 m4 l4">
+                        <button type="button" class="btn blue darken-2" ng-click="filtrosAplicar()">
 							Aplicar Filtros
 							<i class="icons ion-android-cancel right"></i>
 						</button>
 
-						<button type="button" class="btn blue lighten-2" ng-click="filtrosCancelar()">
+                        <button type="button" class="btn blue lighten-2" ng-click="filtrosCancelar()">
 							Cancelar Filtros
 							<i class="icons ion-android-upload right"></i>
-						</button>						
-					</div>
-				</div>
+						</button>
+                    </div>
+                </div>
 
-
-
-
-
-			</div>
-			<!-- Tabla: Partes -->
-			<table class="table bordered striped hightlight">
-				<tr>
-					<td width="50" align="center">
-						<strong>ID</strong>
-					</td>
-					<td width="*" align="center">
-						<strong>TITULO</strong>
-					</td>
-					<td width="80" align="center">
-						<strong>REDACTADO</strong>
-					</td>
-					<td width="80" align="center">
-						<strong>PUBLICADO</strong>
-					</td>
-					<td width="80" align="center">
-						<strong>HORA</strong>
-					</td>
-					<td width="80" align="center">
-						<strong>ESTADO</strong>
-					</td>
-					<td width="130" align="center">
-						<strong>ACCIONES<strong>
+            </div>
+            <!-- Tabla: Partes -->
+            <table class="table bordered striped hightlight">
+                <tr>
+                    <td width="50" align="center">
+                        <strong>ID</strong>
+                    </td>
+                    <td width="*" align="center">
+                        <strong>TITULO</strong>
+                    </td>
+                    <td width="80" align="center">
+                        <strong>REDACTADO</strong>
+                    </td>
+                    <td width="80" align="center">
+                        <strong>PUBLICADO</strong>
+                    </td>
+                    <td width="80" align="center">
+                        <strong>HORA</strong>
+                    </td>
+                    <td width="80" align="center">
+                        <strong>ESTADO</strong>
+                    </td>
+                    <td width="130" align="center">
+                        <strong>ACCIONES<strong>
 					</td>
 				</tr>
 				<tr ng-repeat="p in partes">

@@ -3,7 +3,7 @@
 session_start();
 
 // Requerir instacia de Wordpress.
-require_once '../../vendor/autoload.php';
+require_once '../../../rest/vendor/autoload.php';
 
 // Funciones.
 class main {
@@ -66,5 +66,7 @@ $main = new main();
 $app = new \Slim\App;
 
 // Instancia de las base de datos Slim.
-$dns   = explode('|',file_get_contents('../../../dblegweb.dsn'));
-$db  = new \Slim\PDO\Database(trim($dns[0]),trim($dns[1]),trim($dns[2]));
+//$db  = new \Slim\PDO\Database('mysql:host=localhost;dbname=test;charset=utf8','test','');
+// Instancia de las base de datos Slim.
+$dsn    = explode('|',file_get_contents('../../../db.dsn'));
+$db     = new \Slim\PDO\Database(trim($dsn[0]),trim($dsn[1]),trim($dsn[2]));
