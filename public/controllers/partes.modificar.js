@@ -3,40 +3,43 @@ angular
     .controller('partesModificar', function($scope, $location, $http, $routeParams, $session) {
 
         $scope.init = function() {
-            $session.init();
-            $scope.id = $routeParams.id;
-            $scope.alert = {};
-            $scope.toolbar = [
-                ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'quote'],
-                ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol'],
-                ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull']
-            ];
-            $http.get('models/partes.php/parte/' + $scope.id)
-                .success(function(json) {
-                    $scope.volanta = json.volanta;
-                    $scope.titulo = json.titulo;
-                    $scope.bajada = json.bajada;
-                    $scope.cabeza = json.cabeza;
-                    $scope.cuerpo = json.cuerpo;
-                    $scope.dia = parseInt(json.dia);
-                    $scope.mes = parseInt(json.mes);
-                    $scope.anio = parseInt(json.anio);
-                    $scope.hora = parseInt(json.hora);
-                    $scope.minuto = parseInt(json.minuto);
-                    $scope.segundo = parseInt(json.segundo);
-                    $http.get('models/partes.php/parte/fotografias/' + $scope.id)
-                        .success(function(json) {
-                            $scope.fotografias = json;
-                            $scope.alert.type = 'yellow';
-                            $scope.alert.text = 'Cambie los datos para modificar el parte de prensa.';
-                        })
-                        .error(function() {
-                            $session.destroy();
-                        });
-                })
-                .error(function() {
-                    $session.destroy();
-                });
+            $session.autorize(function() {
+                $scope.id = $routeParams.id;
+                $scope.alert = {};
+                $scope.toolbar = [
+                    ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'quote'],
+                    ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol'],
+                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull']
+                ];
+                $http
+                    .get('/rest/ful/adminpre/index.php/parte/' + $scope.id)
+                    .success(function(json) {
+                        $scope.volanta = json.volanta;
+                        $scope.titulo = json.titulo;
+                        $scope.bajada = json.bajada;
+                        $scope.cabeza = json.cabeza;
+                        $scope.cuerpo = json.cuerpo;
+                        $scope.dia = parseInt(json.dia);
+                        $scope.mes = parseInt(json.mes);
+                        $scope.anio = parseInt(json.anio);
+                        $scope.hora = parseInt(json.hora);
+                        $scope.minuto = parseInt(json.minuto);
+                        $scope.segundo = parseInt(json.segundo);
+                        $http
+                            .get('/rest/ful/adminpre/index.php/parte/fotografias/' + $scope.id)
+                            .success(function(json) {
+                                $scope.fotografias = json;
+                                $scope.alert.type = 'yellow';
+                                $scope.alert.text = 'Cambie los datos para modificar el parte de prensa.';
+                            })
+                            .error(function() {
+                                $session.destroy();
+                            });
+                    })
+                    .error(function() {
+                        $session.destroy();
+                    });
+            });
         };
 
         $scope.cancelar = function() {
@@ -44,28 +47,22 @@ angular
         };
 
         $scope.aceptar = function() {
-            //$session.autorize(function(){
-            json = {
-                volanta: $scope.volanta,
-                titulo: $scope.titulo,
-                bajada: $scope.bajada,
-                fecha: $scope.anio + '-' + $scope.mes + '-' + $scope.dia,
-                hora: $scope.hora + ':' + $scope.minuto + ':' + $scope.segundo
-            };
-            $http.put('models/partes.php/parte/' + $scope.id, json)
-                .success(function(json) {
-                    $('#loading').hide();
-                    if (json.result) {
+            $session.autorize(function() {
+                json = {
+                    volanta: $scope.volanta,
+                    titulo: $scope.titulo,
+                    bajada: $scope.bajada,
+                    cabeza: $scope.cabeza,
+                    cuerpo: $scope.cuerpo,
+                    fecha: $scope.anio + '-' + $scope.mes + '-' + $scope.dia,
+                    hora: $scope.hora + ':' + $scope.minuto + ':' + $scope.segundo
+                };
+                $http
+                    .put('/rest/ful/adminpre/index.php/parte/' + $scope.id, json)
+                    .success(function(json) {
                         $location.path('/partes');
-                    } else {
-                        $scope.alert.type = 'red';
-                        $scope.alert.text = 'Se detecto un error.';
-                    }
-                })
-                .error(function() {
-                    $session.destroy();
-                });
-            //});
+                    });
+            });
         };
 
         $scope.subir = function() {
@@ -99,13 +96,12 @@ angular
                                     form.append('fecha', $scope.anio + '-' + $scope.mes + '-' + $scope.dia);
                                     form.append('archivo', imagejpg);
                                     $.ajax({
-                                        url: 'models/partes.php/parte/fotografia',
+                                        url: '/rest/ful/adminpre/index.php/parte/fotografia',
                                         type: 'POST',
                                         processData: false,
                                         contentType: false,
                                         data: form,
-                                        success: function(j) {
-                                            json = JSON.parse(j);
+                                        success: function(json) {
                                             if (json.result) {
                                                 img = '<a ';
                                                 img += 'id="' + json.fotoId + json.partesFotoId + '" ';
@@ -130,18 +126,5 @@ angular
             });
         };
 
-        $scope.removeFotografia = function(f, pf, a) {
-            $http.delete('models/partes.php/parte/fotografia/' + f + '/' + pf + '/' + a)
-                .success(function(json) {
-                    if (json.result) {
-                        $('#' + f + pf).remove();
-                    }
-                })
-                .error(function() {
-                    $session.destroy();
-                });
-        };
-
         $scope.init();
-
     });
