@@ -137,13 +137,17 @@ angular
     });
 
 window.removeFotografia = function(f, pf, a) {
+    $('#fotoprogress').show();
     $.ajax({
         url: '/rest/ful/adminpre/index.php/parte/fotografia/' + f + '/' + pf + '/' + a,
         type: 'DELETE',
         processData: false,
         contentType: false,
         success: function(json) {
-            if (json.result) $('#' + f + pf).remove();
+            if (json.result) {
+                $('#' + f + pf).remove();
+                $('#fotoprogress').hide();
+            }
         }
     });
 };

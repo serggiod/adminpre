@@ -4,6 +4,7 @@ angular
 
         $scope.init = function() {
             $session.autorize(function() {
+                $('#fotoprogress').hide();
                 $scope.id = $routeParams.id;
                 $scope.alert = {};
                 $scope.toolbar = [
@@ -76,6 +77,7 @@ angular
                 var file = input.files[0];
                 var type = file.type;
                 if (type.toString().substring(0, 5) === 'image') {
+                    $('#fotoprogress').show();
                     reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.addEventListener('loadend', (object) => {
@@ -111,6 +113,7 @@ angular
                                                 img += 'width="120" style="margin:5px;float:left;"/>';
                                                 img += '</a>';
                                                 $('#fotografiasDisplay').append(img);
+                                                $('#fotoprogress').hide();
                                             }
                                         },
                                         error: function() { $location.path('/login'); }
@@ -122,6 +125,7 @@ angular
                 } else {
                     $scope.alert.type = 'red';
                     $scope.alert.text = 'Solo puede subir imagenes.';
+                    $('#fotoprogress').hide();
                 }
             });
         };
